@@ -1,0 +1,96 @@
+syntax = "proto2";
+
+package sok_status;
+
+message SokStatus {
+//    enum StatusCase {
+//        STATUS_NOT_SET = 0;
+//        LAN_NET_STATUS = 1;
+//        WIFI_NET_STATUS = 2;
+//        CELL_NET_STATUS = 3;
+//        RS485_SLAVE_NET_STATUS = 4;
+//        ZB_SLAVE_NET_STATUS = 5;
+//    }
+
+    oneof status {
+        LanNetStatus lanNetStatus = 1;
+        WifiNetStatus wifiNetStatus = 2;
+        CellNetStatus cellNetStatus = 3;
+        Rs485SlaveNetStatus rs485SlaveNetStatus = 4;
+        ZbSlaveNetStatus zbSlaveStatus = 5;
+    }
+
+    enum LanNetStatus {
+        LAN_UNKNOWN = 0;
+        LAN_CABLE_NOT_CONNECTED = 1;
+        LAN_ERROR_DHCP = 2;
+        LAN_NO_INTERNET_CONNECTION = 3;
+        LAN_ERROR_DNS = 4;
+        LAN_CONNECTING_TO_SERVER = 5;
+        LAN_WAITING_FOR_SERVER_RESPONSE = 6;
+        LAN_SERVER_RESPONDED = 7;
+    }
+
+    enum WifiNetStatus {
+        WIFI_UNKNOWN = 0;
+        WIFI_NOT_CONNECTED = 1;
+        WIFI_CONNECTION_IN_PROGRESS = 2;
+        WIFI_ERROR_WRONG_PASSWORD = 3;
+        WIFI_ERROR_UNREACHABLE = 4;
+        WIFI_ERROR_DHCP = 5;
+        WIFI_ERROR_CONNECTION_OTHER = 6;
+        WIFI_NO_INTERNET_CONNECTION = 7;
+        WIFI_ERROR_DNS = 8;
+        WIFI_CONNECTING_TO_SERVER = 9;
+        WIFI_WAITING_FOR_SERVER_RESPONSE = 10;
+        WIFI_SERVER_RESPONDED = 11;
+    }
+
+    enum CellNetStatus {
+        CELL_UNKNOWN = 0;
+        CELL_NOT_DETECTED = 1;
+        CELL_DETECTION_IN_PROGRESS = 2;
+        CELL_INIT_MODULE = 3;
+        CELL_NO_SIM_CARD = 4;
+        CELL_MISSING_PIN = 5;
+        CELL_SIM_NOT_REGISTERED = 6;
+        CELL_MODEM_NOT_ACTIVATED = 7;
+        CELL_MISSING_APN = 8;
+        CELL_NO_SIGNAL = 9;
+        CELL_NO_COMM_WITH_MODULE = 10;
+        CELL_ESTABLISHING_INTERNET_CONNECTION = 11;
+        CELL_ERROR_NO_DNS = 12;
+        CELL_NO_INTERNET_CONNECTION = 13;
+        CELL_NO_TELEM_PLAN_SELECT = 14;
+        CELL_ACTIVATING_TELEM_PLAN = 15;
+        CELL_ACTIVATING_ERROR_NO_RESPONSE = 16;
+        CELL_ACTIVATING_ERROR_UNIDENTIFIED_NUMBER = 17;
+        CELL_ACTIVATING_ERROR_SMS_BLOCKED = 18;
+        CELL_ACTIVATING_ERROR_NO_SMS = 19;
+        CELL_ACTIVATING_ERROR = 20;
+        CELL_CONNECTING_TO_SERVER = 21;
+        CELL_CONNECTED = 22;
+        CELL_SERVER_RESPONDED = 23;
+    }
+
+    enum Rs485SlaveNetStatus {
+        RS485_SLAVE_UNKNOWN = 0;
+        RS485_SLAVE_NOT_CONFIGURED = 1;
+        RS485_SLAVE_NO_MASTER = 2;
+        RS485_SLAVE_NO_GRANT_RECEIVED = 3;
+        RS485_SLAVE_CONNECTED_TO_MASTER = 4;
+        RS485_SLAVE_SERVER_RESPONDED = 5;
+    }
+
+    enum ZbSlaveNetStatus {
+        ZB_SLAVE_UNKNOWN = 0;
+        ZB_SLAVE_NOT_DETECTED = 1;
+        ZB_DETECTION_IN_PROGRESS = 2;
+        ZB_INIT_MODULE = 3;
+        ZB_SLAVE_NOT_CONFIGURED = 4;
+        ZB_SLAVE_DISASSOCIATED = 5;
+        ZB_SLAVE_NO_COMM_WITH_COORDINATOR = 6;
+        ZB_SLAVE_CONNECTED_TO_COORDINATOR = 7;
+        ZB_SLAVE_SERVER_RESPONDED = 8;
+    }
+}

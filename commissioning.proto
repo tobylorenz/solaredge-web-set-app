@@ -1,0 +1,212 @@
+syntax = "proto2";
+
+import "general_types.proto";
+import "monitoring_details_package.proto";
+import "pre_commissioning.proto";
+
+package commissioning;
+
+message Notification {
+    optional pre_commissioning.PreCommBanner preCommissioning = 1;
+}
+
+message Status {
+    map<string, FileState> fileStateMap = 1;
+    optional string serialNumber = 2;
+    optional UpgradeStatus upgradeStatus = 3;
+    optional uint32 totalTime = 4;
+    optional uint32 totalProgress = 5;
+    optional DeviceMode deviceMode = 6;
+    optional Notification notification = 7;
+
+    enum FileStatus {
+        NONE = 0;
+        UPLOADED = 1;
+        PROCESSING = 2;
+        ERROR = 3;
+        DONE = 4;
+    }
+
+    enum ErrorType {
+        NONE = 0;
+        ERR_HASH_VERIFICATION = 1;
+        ERR_FILE_SIGNATURE = 2;
+        ERR_HASH_MISSING = 3;
+        ERR_HASH_WRONG_SN = 4;
+        ERR_INSUFFICIENT_STORAGE = 5;
+        ERR_OTHER = 6;
+        ERR_TARGET_TYPE = 7;
+        ERR_WRONG_PN = 8;
+    }
+
+    enum UpgradeStatus {
+        IDLE = 0;
+        UPGRADING = 1;
+        UPGRADE_ERROR = 2;
+    }
+
+    enum DeviceMode {
+        COMMISSIONING = 0;
+        PRE_COMMISSIONING_NOT_ACTIVATED = 1;
+        PRE_COMMISSIONING_ACTIVATED = 2;
+    }
+
+    message FileState {
+        optional FileType fileType = 1;
+        optional uint32 retry = 2;
+        optional FileStatus fileStatus = 3;
+        optional uint32 executionProgress = 4;
+        optional ErrorType errorType = 5;
+        optional general_types.ControllerType controllerType = 6;
+        optional general_types.Battery batteries = 7;
+    }
+}
+
+message DeviceIdentity {
+    optional bool isActivated = 1;
+    optional general_types.ProductFamily productFamily = 2;
+    optional general_types.ProductType productType = 3;
+    repeated general_types.Controller controllersList = 4;
+    repeated general_types.Battery batteriesList = 5;
+    optional string serialNumber = 6;
+    optional string homeUrl = 7;
+    optional string statusUrl = 8;
+    optional string viewOnlyUrl = 9;
+    optional string myseBaseUrl = 10;
+    optional string myseStatusSubUrl = 11;
+    optional string myseCommunciationSubUrl = 12;
+    optional string myseEvsaSetupSubUrl = 13;
+    optional string monitoringOnlyBaseUrl = 14;
+    optional bool isReady = 15;
+    optional string myseMonitoringSubUrl = 16;
+    optional string preCommissioningBaseUrl = 17;
+    optional string pn = 18;
+}
+
+message DeviceIdentityStatus {
+    optional DeviceIdentity deviceIdentity = 1;
+    optional Status deviceStatus = 2;
+}
+
+message Description {
+    optional uint32 filesCount = 1;
+    optional ActivationMetadata activationMetadata = 2;
+
+    message ActivationMetadata {
+        optional bytes spffHash = 1;
+        optional string pn = 2;
+    }
+}
+
+message ErrorResponse {
+    optional ErrorCode errorCode = 1;
+    optional string description = 2;
+
+    enum ErrorCode {
+        UNDEFINED = 0;
+        AUTHENTICATION_ERROR = 1;
+        COMMUNICATION_ERROR = 2;
+        INTERNAL_ERROR = 3;
+        INVALID_FILE = 4;
+    }
+}
+
+message UploadStatus {
+    optional Status status = 1;
+
+    enum Status {
+        SUCCESS = 0;
+        ERROR_FILE_SIGNATURE = 1;
+        ERROR_INSUFFICIENT_STORAGE = 2;
+    }
+}
+
+message Activation {
+    optional bytes spff = 1;
+    optional bytes spffHash = 2;
+    optional string pn = 3;
+}
+
+message IsReady {
+    optional uint32 progess = 1;
+    optional bool ready = 2;
+}
+
+message Communication {
+    optional bool sOk = 1;
+    optional bool internalConnection = 2;
+    optional general_types.DateTime lastConnection = 3;
+    optional uint32 reconnectTimeout = 4;
+    optional ConnectionType econnectionType = 5;
+    optional Lan lan = 6;
+    optional Wifi wifi = 7;
+    optional Cellular cellular = 8;
+
+    enum ConnectionType {
+        LAN = 0;
+        WIFI = 1;
+        WIFI_GATEWAY = 2;
+        CELLULAR = 3;
+        RS485_1_SLAVE = 4;
+        RS485_2_SLAVE = 5;
+        ZIGBEE_SLAVE = 6;
+    }
+
+    message Lan {
+        optional bool dhcp = 1;
+    }
+
+    message Wifi {
+        optional string ssid = 1;
+        optional WifiSignalStrength signalStrength = 2;
+
+        enum WifiSignalStrength {
+            NONE = 0;
+            LOW = 1;
+            MID = 2;
+            HIGH = 3;
+            EXCELLENT = 4;
+        }
+    }
+
+    message Cellular {
+        optional string operator = 1;
+        optional CellularSignalStrength signalStrength = 2;
+
+        enum CellularSignalStrength {
+            NONE = 0;
+            LOWEST = 1;
+            LOW = 2;
+            MEDIUM = 3;
+            HIGH = 4;
+            HIGHEST = 5;
+            UNKNOWN = 6;
+        }
+    }
+}
+
+message Cert {
+    optional string content = 1;
+}
+
+message ApiMonitoringDetails {
+    optional monitoring_details_package.ApiMonitorDetailsBase monitoringDetails = 1;
+}
+
+message KeepAlive {
+    optional string serialNumber = 1;
+}
+
+enum FileType {
+    PORTIA = 0;
+    DSP1 = 1;
+    DSP2 = 2;
+    ACTIVATION = 3;
+    CONFIGURATION = 4;
+    FW_UPGRADE = 5;
+    UNKNOWN = 6;
+}
+
+enum DeviceInitFlags {
+    NONE = 0;
+}
