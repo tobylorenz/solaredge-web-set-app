@@ -1,0 +1,42 @@
+syntax = "proto2";
+
+package pre_commissioning;
+
+import "general_types/general_types.proto";
+import "types/types.proto";
+
+message PreCommBanner {
+  optional types.Bool power_bank_connected = 1;
+  optional types.Bool high_dc_voltage = 2;
+  optional types.FloatS dc_voltage = 3;
+}
+
+message PreCommStatus {
+  optional DCStatus dc_status = 1 [default = IDLE];
+  optional types.FloatS unified_dc_voltage = 2;
+  repeated Unit units = 3;
+  optional types.Uint32 dc_increase_current_sec = 4;
+  optional types.Uint32 dc_increase_total_sec = 5;
+
+  enum DCStatus {
+    IDLE = 0;
+    VDC_INCREASING = 1;
+    VDC_LOW = 2;
+    VDC_HIGH_NOT_ALL_UNITS = 3;
+    VDC_HIGH = 4;
+  }
+
+  message Unit {
+    optional types.String sn = 1;
+    optional UnitStatus status = 2 [default = IDLE];
+    optional general_types.Position position = 3 [default = UNKNOWN];
+    optional types.FloatS dc_voltage = 4;
+
+    enum UnitStatus {
+      IDLE = 0;
+      NOT_COMMUNICATION = 1;
+      VDC_LOW = 2;
+      VDC_HIGH = 3;
+    }
+  }
+}

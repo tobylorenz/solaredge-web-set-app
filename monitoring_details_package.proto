@@ -1,9 +1,0 @@
-syntax = "proto2";
-
-package monitoring_details_package;
-
-message ApiMonitorDetailsBase {
-    optional string installerId = 1;
-    optional string accountId = 2;
-    optional string siteId = 3;
-}

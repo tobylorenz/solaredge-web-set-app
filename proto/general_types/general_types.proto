@@ -1,0 +1,208 @@
+syntax = "proto2";
+
+package general_types;
+
+import "types/types.proto";
+
+message SysParams {
+//  enum ValueCase {
+//    VALUE_NOT_SET = 0;
+//    UINT32_VALUE = 2;
+//    FLOAT_VALUE = 3;
+//    STRING_VALUE = 4;
+//    INT32_VALUE = 5;
+//  }
+
+  optional uint32 index = 1;
+  oneof value {
+    uint32 uint32_value = 2;
+    float float_value = 3;
+    string string_value = 4;
+    int32 int32_value = 5;
+  }
+}
+
+message Version {
+  optional uint32 major = 1;
+  optional uint32 minor = 2;
+  optional uint32 build = 3;
+  optional uint32 ci_build = 4;
+}
+
+message Controller {
+  optional ControllerType controller_type = 1;
+  optional uint32 sw_type = 2;
+  optional Version version = 3;
+  optional string serial_number = 4;
+  optional bool connected = 5;
+}
+
+message SubsystemError {
+  optional types.Uint32 error_code = 1;
+  optional types.Uint32 subsystem = 2;
+  optional types.String error_display_intro = 3;
+}
+
+message Battery {
+  optional string serial_number = 1;
+  optional string hwid = 2;
+  optional string version = 3;
+  optional string manufacturer = 4;
+  optional bool connected = 5;
+}
+
+message SePacket {
+  optional XPacket packet = 1;
+}
+
+message XPacket {
+  optional uint32 src = 1;
+  optional uint32 dst = 2;
+  optional uint32 id = 3;
+  optional uint32 code = 4;
+  optional uint32 len = 5;
+  optional bytes data = 6;
+}
+
+message MapFloatToFloat {
+  optional float key = 1;
+  optional float value = 2;
+}
+
+message MapStringToString {
+  optional string key = 1;
+  optional string value = 2;
+}
+
+message MapUintToUint {
+  optional uint32 key = 1;
+  optional uint32 value = 2;
+}
+
+message GridParams {
+  optional float l1 = 1;
+  optional float l2 = 2;
+  optional float l3 = 3;
+}
+
+message Date {
+  optional uint32 year = 1;
+  optional uint32 month = 2;
+  optional uint32 day = 3;
+  optional uint32 hour = 4;
+  optional uint32 minute = 5;
+  optional uint32 second = 6;
+}
+
+message DateTime {
+  optional types.Uint32 year = 1;
+  optional types.Uint32 month = 2;
+  optional types.Uint32 day = 3;
+  optional types.Uint32 hour = 4;
+  optional types.Uint32 minute = 5;
+  optional types.Uint32 second = 6;
+}
+
+message Weekdays {
+  optional bool sunday = 1;
+  optional bool monday = 2;
+  optional bool tuesday = 3;
+  optional bool wednesday = 4;
+  optional bool thursday = 5;
+  optional bool friday = 6;
+  optional bool saturday = 7;
+}
+
+message Float32 {
+  optional int32 value = 1;
+  optional int32 scaling = 2;
+}
+
+message MapFloat32ToFloat32 {
+  optional Float32 key = 1;
+  optional Float32 value = 2;
+}
+
+message Header {
+  optional string id = 1;
+  optional uint32 timestamp = 2;
+}
+
+enum ControllerType {
+  PORTIA = 0;
+  VENUS_DSP1 = 1;
+  VENUS_DSP2 = 2;
+  JUPITER_DSP1 = 3;
+  JUPITER_DSP2 = 4;
+  VEGA_DSP = 5;
+  DISP_CTRL = 6;
+  FAN_CTRL = 7;
+  VENUS3_DSP1 = 8;
+  VENUS3_DSP2 = 9;
+  VENUS_LITE_DSP1 = 10;
+  VENUS_LITE_DSP2 = 11;
+  JUPITER_DSP1_BOOTLOADER = 12;
+  EVSE = 13;
+  SE_DCDC = 14;
+  METER = 15;
+  LG_DCDC = 16;
+  LG_BMS = 17;
+  HG2 = 18;
+  JUPITER_SE_DSP1 = 19;
+  JUPITER_SE_DSP2 = 20;
+  BUI = 21;
+  FOUR_BOX = 22;
+  VENUS3_SE_DSP1 = 23;
+  VENUS3_SE_DSP2 = 24;
+  SE_BATTERY_SMCU = 25;
+  DR_METER = 26;
+  SE_BATTERY_DCDC = 27;
+  SE_BATTERY_BMS = 28;
+  BOOSTER = 29;
+  COMMISSIONER = 30;
+}
+
+enum ProductFamily {
+  PRODUCT_FAMILY_NONE = 0;
+  SINGLE_PHASE_INVERTER = 1;
+  THREE_PHASE_INVERTER = 2;
+  SAFETY_AND_MONITORING_INTERFACE = 3;
+  GATEWAY = 4;
+  STRING_COMBINER = 5;
+  HOME_GATEWAY_2 = 6;
+  ACCESSORIES = 7;
+}
+
+enum ProductType {
+  VENUS = 0;
+  JUPITER = 1;
+  VEGA = 2;
+  CCG = 3;
+  GEMINI = 4;
+  SATURN = 5;
+  MARS = 6;
+  VOYAGER = 7;
+  VENUS3 = 8;
+  JUMBO_JUPITER = 9;
+  VENUS_LITE = 10;
+  CCG_UNUSED = 11;
+  FFG = 12;
+  ZIGBEE_GATEWAY = 13;
+  EVSE_SA = 14;
+  WIFI_REPEATER = 15;
+  WIFI_GATEWAY = 16;
+  PRODUCT_TYPE_WATER_HEATER = 17;
+  PRODUCT_TYPE_CCG_GPU = 18;
+  PRODUCT_TYPE_METER = 19;
+  PRODUCT_TYPE_JJ_4BOX = 20;
+  PRODUCT_TYPE_BUI = 21;
+  PRODUCT_TYPE_NONE = 22;
+}
+
+enum Position {
+  UNKNOWN = 0;
+  LEFT = 1;
+  CENTER = 2;
+  RIGHT = 3;
+  PRIMARY = 4;
+}

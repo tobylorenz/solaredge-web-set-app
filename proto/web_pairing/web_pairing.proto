@@ -1,0 +1,46 @@
+syntax = "proto2";
+
+package web_pairing;
+
+import "pre_commissioning/pre_commissioning.proto";
+
+message Pairing {
+  optional Request request = 1;
+  optional Status status = 2;
+  optional pre_commissioning.PreCommStatus pre_comm_status = 3;
+
+  message Request {
+    optional uint32 duration = 1;
+  }
+
+  message Status {
+    optional uint32 sessionid = 1;
+    optional EInfo info = 2;
+    optional EStage stage = 3;
+    optional uint32 progress = 4;
+    optional uint32 remaining_time = 5;
+  }
+
+  enum EInfo {
+    OK = 0;
+    INV_OFF = 1;
+    NIGHT_MODE = 2;
+    IN_PROCESS = 3;
+    ERROR = 4;
+    ERROR_OPT_DETECT = 5;
+    ERROR_STRING_DETECT = 6;
+    NOT_IN_PROCESS = 7;
+    INV_DC_POWERED_ONLY = 8;
+    INV_IN_BACKUP = 9;
+  }
+
+  enum EStage {
+    NOT_ACTIVE = 0;
+    WAIT_VIN_DECREASE = 1;
+    PAIRING = 2;
+    SAVE_SESSION = 3;
+    OPT_DETECT = 4;
+    STRING_DETECT = 5;
+    END = 6;
+  }
+}

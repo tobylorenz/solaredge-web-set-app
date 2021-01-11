@@ -1,0 +1,152 @@
+syntax = "proto2";
+
+package web_device_manager;
+
+import "general_types/general_types.proto";
+import "types/types.proto";
+
+message DeviceManager {
+  optional AddDeviceStatus add_device_status = 1;
+  optional types.Uint32 online_devices = 2;
+  repeated HaDevice ha_device = 3;
+
+
+  message AddDeviceStatus {
+    optional Status status = 1;
+    optional types.Uint32 max_duration = 2;
+    optional types.Uint32 current_duration = 3;
+    optional types.Uint32 paired_devices = 4;
+
+    enum Status {
+      NOT_IN_PROCESS = 0;
+      IN_PROCESS = 1;
+    }
+  }
+
+  message HaDevice {
+//    enum HaDeviceCase {
+//      HA_DEVICE_NOT_SET = 0;
+//      HA_LEGACY = 2;
+//    }
+
+    optional types.Uint32 identifier = 1;
+    oneof ha_device {
+      HaLegacy ha_legacy = 2;
+    }
+
+    enum DeviceType {
+      ON_OFF = 0;
+      LEVEL_CTRL = 1;
+    }
+
+    enum State {
+      OFF = 0;
+      ON = 1;
+      OFFLINE = 2;
+    }
+
+    message DeviceState {
+      optional State state = 1;
+      optional types.Uint32 level = 2;
+      optional State request_state = 3;
+      optional types.Bool locked = 4;
+    }
+
+    message HaLegacy {
+      optional DeviceMode device_mode = 1;
+      optional DeviceStatus device_status = 2;
+      optional DeviceInfo device_info = 3;
+      optional DeviceProperties device_prop = 4;
+      optional types.Bool online = 5;
+
+      message DeviceMode {
+        optional types.Bool ha = 1;
+        optional types.Bool alarm = 2;
+      }
+
+      message DeviceInfo {
+        optional DeviceType device_type = 1;
+        optional types.String serial_num = 2;
+        optional types.String model = 3;
+        optional types.String mfg = 4;
+        optional types.String version = 5;
+        optional types.String mac = 6;
+      }
+
+      message DeviceStatus {
+        optional DeviceState device_state = 1;
+        optional types.Float power = 2;
+        optional types.Float energy = 3;
+        optional general_types.Date last_comm = 4;
+        optional types.Int32 rssi = 5;
+      }
+
+      message DeviceProperties {
+        optional types.Uint32 rated_power = 1;
+        optional types.Uint32 min_power_to_start = 2;
+        optional types.Uint32 min_power_delay_to_start_mins = 3;
+        optional types.Uint32 max_purchased_power_to_stop = 4;
+        optional types.Uint32 max_purchased_power_delay_to_stop_mins = 5;
+        optional types.Uint32 min_on_time_mins = 6;
+        optional types.Uint32 max_on_time_mins = 7;
+      }
+    }
+  }
+}
+
+message Cmd {
+//  enum CommandsCase {
+//    COMMANDS_NOT_SET = 0;
+//    EMPTY_CMD = 1;
+//    HA_DEVICE = 2;
+//    REMOVE_DEVICE = 3;
+//  }
+
+  oneof commands {
+    EmptyCmd empty_cmd = 1;
+    DeviceManager.HaDevice ha_device = 2;
+    types.Uint32 remove_device = 3;
+  }
+
+  enum EmptyCmd {
+    DEVICE_MANAGER_GET = 0;
+    DEVICE_MANAGER_REMOVE_ALL = 1;
+    DEVICE_MANAGER_ADD_DEVICE_START = 2;
+    DEVICE_MANAGER_ADD_DEVICE_STOP = 3;
+  }
+}
+
+message Resp {
+//  enum ResponsesCase {
+//    RESPONSES_NOT_SET = 0;
+//    EMPTY_RESP = 1;
+//    DEVICE_MANAGER = 2;
+//  }
+
+  oneof responses {
+    EmptyResp empty_resp = 1;
+    DeviceManager device_manager = 2;
+  }
+
+  enum EmptyResp {
+    TYPE_NONE = 0;
+    TYPE_RESP_ACK = 1;
+    TYPE_RESP_NACK = 2;
+    TYPE_RESP_ERROR = 3;
+    TYPE_RESP_ERROR_FORBIDDEN_VALUE_OUT_OF_RANGE = 4;
+    TYPE_RESP_ERROR_BAD_REQUEST = 5;
+  }
+}
+
+message DeviceManagerForm {
+//  enum TypesCase {
+//    TYPES_NOT_SET = 0;
+//    CMD = 1;
+//    RESP = 2;
+//  }
+
+  oneof types {
+    Cmd cmd = 1;
+    Resp resp = 2;
+  }
+}

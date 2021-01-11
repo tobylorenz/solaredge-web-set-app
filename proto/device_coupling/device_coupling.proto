@@ -1,0 +1,36 @@
+syntax = "proto2";
+
+package device_coupling;
+
+import "general_types/general_types.proto";
+import "types/types.proto";
+
+message DeviceCoupling {
+  repeated DetectedDevice devices = 1;
+  optional DetectedDevice coupled_device = 2;
+  optional CouplingCommand cmd = 3 [default = NONE];
+  optional CouplingStatus status = 4 [default = IDLE];
+
+  enum CouplingCommand {
+    NONE = 0;
+    DECOUPLING = 1;
+    COUPLING = 2;
+  }
+
+  enum CouplingStatus {
+    IDLE = 0;
+    IN_PROGRESS = 1;
+    FAILED_NOT_COMMUNICATING = 2;
+    FAILED_ALREADY_COUPLED = 3;
+    FAILED_NOT_FOUND = 4;
+    FAILED_ERROR = 5;
+    SUCCESS = 6;
+    SUCCESS_NO_HANDSHAKE = 7;
+  }
+
+  message DetectedDevice {
+    optional types.String sn = 1;
+    optional types.Bool communication = 2;
+    optional general_types.Date last_communication = 3;
+  }
+}
