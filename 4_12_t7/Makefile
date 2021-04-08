@@ -1,10 +1,12 @@
 proto_files = \
+    proto/central_settings_errors/central_settings_errors.proto \
     proto/commissioning/commissioning.proto \
     proto/device_coupling/device_coupling.proto \
     proto/factory_reset/factory_reset.proto \
     proto/general_errors/general_errors.proto \
     proto/general_types/general_types.proto \
     proto/hg2/hg2.proto \
+    proto/import_limit_errors/import_limit_errors.proto \
     proto/inverter_errors/inverter_errors.proto \
     proto/meter_errors/meter_errors.proto \
     proto/monitoring_details_package/monitoring_details_package.proto \
@@ -13,8 +15,10 @@ proto_files = \
     proto/storedge_errors/storedge_errors.proto \
     proto/types/types.proto \
     proto/web_app_configs/web_app_configs.proto \
+    proto/web_central_settings/web_central_settings.proto \
     proto/web_communication/web_communication.proto \
     proto/web_device_manager/web_device_manager.proto \
+    proto/web_energy_restore/web_energy_restore.proto \
     proto/web_err_resps/web_err_resps.proto \
     proto/web_grid_protection/web_grid_protection.proto \
     proto/web_information/web_information.proto \
@@ -26,7 +30,13 @@ proto_files = \
     proto/zigbee/zigbee.proto
 
 all: \
-    solaredge.js
+    solaredge.cpp
 
 solaredge.js: $(proto_files)
 	protoc -Iproto --js_out=library=solaredge,binary:. $(proto_files)
+
+solaredge.py: $(proto_files)
+	protoc -Iproto --python_out=. $(proto_files)
+
+solaredge.cpp: $(proto_files)
+	protoc -Iproto --cpp_out=cpp $(proto_files)

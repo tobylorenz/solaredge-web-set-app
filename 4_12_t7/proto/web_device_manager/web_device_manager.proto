@@ -9,10 +9,10 @@ message DeviceManager {
   optional AddDeviceStatus add_device_status = 1;
   optional types.Uint32 online_devices = 2;
   repeated HaDevice ha_device = 3;
-
+  optional RemoveSettings remove_all_settings = 4;
 
   message AddDeviceStatus {
-    optional Status status = 1;
+    optional Status status = 1 [default = NOT_IN_PROCESS];
     optional types.Uint32 max_duration = 2;
     optional types.Uint32 current_duration = 3;
     optional types.Uint32 paired_devices = 4;
@@ -23,32 +23,45 @@ message DeviceManager {
     }
   }
 
+  message RemoveSettings {
+    optional types.Bool enabled = 1;
+    optional Warning warning = 2 [default = NONE];
+
+    enum Warning {
+      NONE = 0;
+      IMPORT_LIMIT_ENABLED = 1;
+    }
+  }
+
   message HaDevice {
 //    enum HaDeviceCase {
 //      HA_DEVICE_NOT_SET = 0;
-//      HA_LEGACY = 2;
+//      HA_LEGACY = 3;
 //    }
 
     optional types.Uint32 identifier = 1;
+    optional RemoveSettings remove_settings = 2;
     oneof ha_device {
-      HaLegacy ha_legacy = 2;
+      HaLegacy ha_legacy = 3;
     }
 
     enum DeviceType {
-      ON_OFF = 0;
-      LEVEL_CTRL = 1;
+      NO_TYPE = 0;
+      ON_OFF = 1;
+      LEVEL_CTRL = 2;
     }
 
     enum State {
-      OFF = 0;
-      ON = 1;
-      OFFLINE = 2;
+      NONE = 0;
+      OFF = 1;
+      ON = 2;
+      OFFLINE = 3;
     }
 
     message DeviceState {
-      optional State state = 1;
+      optional State state = 1 [default = NONE];
       optional types.Uint32 level = 2;
-      optional State request_state = 3;
+      optional State request_state = 3 [default = NONE];
       optional types.Bool locked = 4;
     }
 
@@ -65,7 +78,7 @@ message DeviceManager {
       }
 
       message DeviceInfo {
-        optional DeviceType device_type = 1;
+        optional DeviceType device_type = 1 [default = NO_TYPE];
         optional types.String serial_num = 2;
         optional types.String model = 3;
         optional types.String mfg = 4;

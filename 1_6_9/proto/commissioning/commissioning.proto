@@ -28,7 +28,7 @@ message Status {
   }
 
   enum ErrorType {
-    NONE = 0;
+//    NONE = 0;
     ERR_HASH_VERIFICATION = 1;
     ERR_FILE_SIGNATURE = 2;
     ERR_HASH_MISSING = 3;
@@ -63,24 +63,24 @@ message Status {
 }
 
 message DeviceIdentity {
-    optional bool is_activated = 1;
-    optional general_types.ProductFamily product_family = 2;
-    optional general_types.ProductType product_type = 3;
-    repeated general_types.Controller controllers = 4;
-    repeated general_types.Battery batteries = 5;
-    optional string serial_number = 6;
-    optional string home_url = 7;
-    optional string status_url = 8;
-    optional string view_only_url = 9;
-    optional string myse_base_url = 10;
-    optional string myse_status_sub_url = 11;
-    optional string myse_communciation_sub_url = 12;
-    optional string myse_evsa_setup_sub_url = 13;
-    optional string monitoring_only_base_url = 14;
-    optional bool is_ready = 15;
-    optional string myse_monitoring_sub_url = 16;
-    optional string pre_commissioning_base_url = 17;
-    optional string pn = 18;
+  optional bool is_activated = 1;
+  optional general_types.ProductFamily product_family = 2;
+  optional general_types.ProductType product_type = 3;
+  repeated general_types.Controller controllers = 4;
+  repeated general_types.Battery batteries = 5;
+  optional string serial_number = 6;
+  optional string home_url = 7;
+  optional string status_url = 8;
+  optional string view_only_url = 9;
+  optional string myse_base_url = 10;
+  optional string myse_status_sub_url = 11;
+  optional string myse_communciation_sub_url = 12;
+  optional string myse_evsa_setup_sub_url = 13;
+  optional string monitoring_only_base_url = 14;
+  optional bool is_ready = 15;
+  optional string myse_monitoring_sub_url = 16;
+  optional string pre_commissioning_base_url = 17;
+  optional string pn = 18;
 }
 
 message DeviceIdentityStatus {
