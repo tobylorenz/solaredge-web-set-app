@@ -211,7 +211,7 @@ message PowerControl {
     }
 
     message ExternalRelay {
-      optional RelayStatus relay_status = 1 [default = NOT_AVAILABLE];
+      optional RelayStatus relay_status = 1;
       optional RelayFunction relay_function = 2;
       optional DisengageMethod disengage_method = 3;
 

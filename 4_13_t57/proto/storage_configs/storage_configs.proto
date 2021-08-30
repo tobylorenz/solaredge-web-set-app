@@ -1,0 +1,20 @@
+syntax = "proto2";
+
+package storage_configs;
+
+import "storage_lib/storage_lib.proto";
+import "types/types.proto";
+
+message StorageConfigs {
+  optional StorageConfigsStatus storage_configs_status = 1;
+  optional storage_lib.EnergyControl energy_control = 2;
+  optional storage_lib.BackupConfigs backup_configs = 3;
+  optional types.Bool charge_from_grid = 4;
+
+  enum StorageConfigsStatus {
+    STORAGE_CONFIGS_PENDING = 0;
+    STORAGE_CONFIGS_IN_PROGRESS = 1;
+    STORAGE_CONFIGS_FAIL = 2;
+    STORAGE_CONFIGS_SUCCESS = 3;
+  }
+}

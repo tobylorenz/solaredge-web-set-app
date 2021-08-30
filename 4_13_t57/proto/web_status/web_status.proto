@@ -1,0 +1,377 @@
+syntax = "proto2";
+
+package web_status;
+
+import "general_types/general_types.proto";
+import "hg2/hg2.proto";
+import "meter_lib/meter_lib.proto";
+import "pre_commissioning/pre_commissioning.proto";
+import "sok_status/sok_status.proto";
+import "types/types.proto";
+import "web_communication/web_communication.proto";
+import "web_energy_restore/web_energy_restore.proto";
+import "web_region/web_region.proto";
+import "web_maintenance/web_maintenance.proto";
+import "zigbee/zigbee.proto";
+
+message Status {
+  optional string sn = 1;
+  optional Site site = 2;
+  optional float power_watt = 3;
+  optional float voltage = 4;
+  optional float frequency_hz = 5;
+  optional OptimizersStatus optimizers_status = 6;
+  optional bool s_ok = 7;
+  optional MngrStatus status = 8;
+  optional SwitchStatus switch_status = 9;
+  optional float cos_phi = 10;
+  optional float limit = 11;
+  optional web_region.Region.Countries country = 12;
+  optional Inverters inverters = 13;
+  optional Communication communication = 14;
+  optional EnergyStatistics energy = 15;
+  optional uint32 portia_error_code = 16;
+  optional uint32 portia_subsystem = 17;
+  optional Evse evse = 18;
+  repeated Meter meters = 19;
+  repeated Battery batteries = 20;
+  optional Notification notification = 21;
+  optional ServerCommunication server_comm = 22;
+  optional web_maintenance.Maintenance.Afci afci = 23;
+  optional web_communication.Communication.ServerChannel server_channel = 24;
+  optional web_communication.Communication.ServerChannelMethod server_channel_method = 25;
+  optional Bui bui = 26;
+  optional sok_status.SokStatus sok_status = 27;
+  optional AdvancedGridSettings advanced_grid_settings = 28;
+  optional types.FloatS q = 29;
+  optional types.FloatS ac_current = 30;
+  optional web_energy_restore.EnergyRestore energy_restore = 31;
+  optional DeviceMode device_mode = 32;
+  optional EnergyNet device_manager_energy_net = 33;
+
+  enum MngrStatus {
+    SHUTTING_DOWN = 0;
+    ERROR = 1;
+    STANDBY = 2;
+    PAIRING = 3;
+    POWER_PRODUCTION = 4;
+    AC_CHARGING = 5;
+    NOT_PAIRED = 6;
+    NIGHT_MODE = 7;
+    GRID_MONITORING = 8;
+    IDLE = 9;
+    GRM_PAIRING = 10;
+    PID_RECTIFICATION = 11;
+  }
+
+  enum SwitchStatus {
+    OFF = 0;
+    ON = 1;
+    P = 2;
+  }
+
+  enum DeviceMode {
+    DEVICE_MODE_IDLE = 0;
+    DEVICE_MODE_RESTORE_ENERGY_COUNTER = 1;
+    DEVICE_MODE_CENTRAL_COMMISSIONING = 2;
+  }
+
+  message Site {
+    optional float production_watt = 1;
+    optional float site_limit_watt = 2;
+    optional InvertersStatus inverters_status = 3;
+
+    message InvertersStatus {
+      optional uint32 enabled = 1;
+      optional uint32 connected = 2;
+    }
+  }
+
+  message Inverters {
+    optional Unit left = 1;
+    optional Unit primary = 2;
+    optional Unit right = 3;
+    repeated Unit units = 4;
+
+    message OptimizersStatus {
+      optional uint32 enabled = 1;
+      optional uint32 connected = 2;
+    }
+
+    message Unit {
+      optional string dsp_sn = 1;
+      optional float voltage = 2;
+      optional OptimizersStatus optimizers_status = 3;
+      optional web_maintenance.Maintenance.Temperature temperature = 4;
+      optional bool fan = 5;
+      optional uint32 error_code = 6;
+      optional uint32 subsystem = 7;
+      optional bool bad_position = 8;
+      optional web_maintenance.Maintenance.Diagnostics.Inverters.Unit.Isolation isolation = 9;
+      optional types.FloatS power = 10;
+      optional general_types.Position position = 11;
+      optional types.FloatS dc_current = 12;
+      optional types.FloatS dc_power = 13;
+      optional types.Bool communicating = 14;
+    }
+  }
+
+  message Communication {
+    optional Rs485Status rs4851 = 1;
+    optional Rs485Status rs4852 = 2;
+    optional LanStatus lan = 3;
+    optional Cellular cellular = 4;
+    optional Wifi wifi = 5;
+    optional Zigbee zigbee = 6;
+    optional web_communication.Communication.Lan lan_info = 7;
+
+    enum LanStatus {
+      OK = 0;
+    }
+
+    message Rs485Status {
+      optional uint32 enabled = 1;
+      optional uint32 connected = 2;
+      optional Protocol protocol = 3;
+
+      message Protocol {
+        optional bool se_slave = 1;
+        optional bool se_master = 2;
+        optional bool modbus_multi_devices = 3;
+        optional bool sunspec = 4;
+        optional bool none = 5;
+      }
+    }
+
+    message Cellular {
+      optional SignalStrength signal_strength = 1;
+      optional string operator = 2;
+
+      enum SignalStrength {
+        NONE = 0;
+        LOWEST = 1;
+        LOW = 2;
+        MEDIUM = 3;
+        HIGH = 4;
+        HIGHEST = 5;
+        UNKNOWN = 6;
+      }
+    }
+
+    message Wifi {
+      optional string chosen_network = 1;
+      optional web_communication.Communication.Wifi.Network.SignalStrength chosen_network_signal = 2;
+      optional types.Bool connected_to_hg = 3;
+    }
+
+    message Zigbee {
+      optional uint32 enabled = 1;
+      optional uint32 connected = 2;
+      optional zigbee.OperationMode operation_mode = 3;
+      optional zigbee.SignalLevel signal_level = 4;
+      optional zigbee.SlaveStatus zigbee_slave_status = 5;
+      optional zigbee.ModuleStatus module_status = 6;
+    }
+  }
+
+  message ServerCommunication {
+//    enum CommTestsCase {
+//      COMM_TESTS_NOT_SET = 0;
+//      LAN_TEST = 1;
+//      HG2_TEST = 2;
+//    }
+
+    oneof comm_tests {
+      LanTest lan_test = 1;
+      hg2.HgCommTest hg2_test = 2;
+    }
+
+    enum CommTestStatus {
+      FAILED = 0;
+      PASSED = 1;
+      NOT_TESTED = 2;
+    }
+
+    message LanTest {
+      optional CommTestStatus physical_connection = 1;
+      optional CommTestStatus ip_address = 2;
+      optional CommTestStatus gateway_link = 3;
+      optional CommTestStatus internet_link = 4;
+      optional CommTestStatus monitoring_link = 5;
+      optional CommTestStatus s_ok = 6;
+    }
+  }
+
+  message EnergyStatistics {
+    optional float today = 1;
+    optional float this_month = 2;
+    optional float this_year = 3;
+    optional float total = 4;
+    optional types.FloatS current_consumption = 5;
+  }
+
+  message OptimizersStatus {
+    optional uint32 enabled = 1;
+    optional uint32 connected = 2;
+  }
+
+  message Evse {
+    optional CarStatus car_status = 1;
+    optional ChargerStatus charger_status = 2;
+    optional float charge_power = 3;
+    optional float session_energy = 4;
+    optional uint32 error_code = 5;
+    optional uint32 subsystem = 6;
+    optional types.String sn = 7;
+
+    enum CarStatus {
+      DISCONNECTED = 0;
+      CONNECTED = 1;
+      CHARGING_CAR = 2;
+    }
+
+    enum ChargerStatus {
+      READY = 0;
+      INITIALIZING = 1;
+      CHARGING = 2;
+      CHARGING_BOOST = 3;
+      CHARGING_EXCESS_PV = 4;
+    }
+  }
+
+  message Meter {
+    optional ConnectionType connection_type = 1;
+    optional meter_lib.MeterFunction func = 2;
+    optional MeterStatus status = 3;
+    optional uint32 id = 4;
+    optional float power = 5;
+    optional float energy = 6;
+    optional uint32 s0_pulse = 7;
+    optional types.String sn = 8;
+    optional MeterStatus meter_status = 9;
+
+    enum ConnectionType {
+      RS485_1 = 0;
+      RS485_2 = 1;
+      S0 = 2;
+      SUBG = 3;
+    }
+
+    enum MeterStatus {
+      OK = 0;
+      COMM_ERROR = 1;
+    }
+  }
+
+  message Battery {
+    optional string sn = 1;
+    optional types.String type = 2;
+    optional BatteryStatus status = 3;
+    optional BatteryState state = 4;
+    optional float power = 5;
+    optional float soe = 6;
+    optional uint32 error_code = 7;
+    optional uint32 subsystem = 8;
+
+    enum BatteryStatus {
+      CONNECTED = 0;
+      DISCONNECTED = 1;
+    }
+
+    enum BatteryState {
+      BMS_STATE_INVALID = -1;
+      BMS_STATE_OFF = 0;
+      BMS_STATE_STDBY = 1;
+      BMS_STATE_INIT = 2;
+      BMS_STATE_CHARGE = 3;
+      BMS_STATE_DISCHARGE = 4;
+      BMS_STATE_FAULT = 5;
+      BMS_STATE_IDLE = 6;
+      BMS_STATE_COMM_ERROR = 7;
+      BMS_STATE_RESERVED1 = 8;
+      BMS_STATE_RESERVED2 = 9;
+      BMS_STATE_SLEEP = 10;
+    }
+  }
+
+  message Notification {
+    optional Shutdown shutdown = 1;
+    optional GRM grm = 2;
+    optional Pairing pairing = 3;
+    optional SlaveDetect slave_detect = 4;
+    optional NotActivated not_activated = 5;
+    optional ErrorBanner error_banner = 6;
+    optional Pid pid = 7;
+    optional pre_commissioning.PreCommBanner pre_commissioning = 8;
+
+    message Header {
+      optional types.Uint32 id = 1;
+      optional Type type = 2;
+
+      enum Type {
+        ERROR = 0;
+        WARNING = 1;
+        INFORMATION = 2;
+      }
+    }
+
+    message Shutdown {
+      optional Header header = 1;
+    }
+
+    message GRM {
+      optional Header header = 1;
+      optional types.Uint32 remaining_time = 2;
+      optional types.Uint32 total_time = 3;
+    }
+
+    message Pairing {
+      optional Header header = 1;
+      optional Pairing pairing_data = 2;
+    }
+
+    message SlaveDetect {
+      optional Header header = 1;
+      optional web_communication.Communication.Rs485.SlaveDetect slave_detect_data = 2;
+    }
+
+    message NotActivated {
+      optional Header header = 1;
+    }
+
+    message ErrorBanner {
+      optional Header header = 1;
+      optional types.Uint32 error_code = 2;
+      optional types.Uint32 Subsystem = 3;
+      optional types.String error_display_intro = 4;
+    }
+
+    message Pid {
+      optional Header header = 1;
+      optional web_maintenance.Maintenance.Pid.Mitigation mitigation = 2;
+      optional types.FloatS dc_voltage = 3;
+    }
+  }
+
+  message Bui {
+    optional types.String sn = 1;
+    optional OperationMode operation_mode = 2;
+    optional types.Bool communicating = 3;
+    optional general_types.SubsystemError subsystem_error = 4;
+    optional types.FloatS line_imbalance = 5;
+
+    enum OperationMode {
+      INV_OPER_MODE_ON_GRID = 0;
+      INV_OPER_MODE_STORAGE_OFF_GRID = 1;
+      INV_OPER_MODE_DG_OFF_GRID = 2;
+    }
+  }
+
+  message AdvancedGridSettings {
+    optional types.Bool alternative_power_source = 1;
+  }
+
+  message EnergyNet {
+    optional types.Uint32 new_devices = 1;
+  }
+}

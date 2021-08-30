@@ -45,7 +45,7 @@ message Status {
   optional types.FloatS q = 29;
   optional types.FloatS ac_current = 30;
   optional web_energy_restore.EnergyRestore energy_restore = 31;
-  optional DeviceMode device_mode = 32 [default = DEVICE_MODE_IDLE];
+  optional DeviceMode device_mode = 32;
 
   enum MngrStatus {
     SHUTTING_DOWN = 0;

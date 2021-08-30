@@ -16,7 +16,7 @@ message Status {
   optional UpgradeStatus upgrade_status = 3;
   optional uint32 total_time = 4;
   optional uint32 total_progress = 5;
-  optional DeviceMode device_mode = 6 [default = COMMISSIONING];
+  optional DeviceMode device_mode = 6;
   optional Notification notification = 7;
 
   enum FileStatus {
@@ -133,7 +133,7 @@ message IsReady {
 }
 
 message Communication {
-  optional bool sOk = 1;
+  optional bool s_ok = 1;
   optional bool internal_connection = 2;
   optional general_types.DateTime last_connection = 3;
   optional uint32 reconnect_timeout = 4;

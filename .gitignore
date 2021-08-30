@@ -1,5 +1,5 @@
-proto/endpoints.txt
-proto/*.js
-proto/*/*.js
-proto/web-set-app_1_6_9.js.gz
-solaredge.js
+*/cpp
+*/proto/endpoints.txt
+*/proto/*/*.js
+*/proto/web-set-app_*
+*/tests

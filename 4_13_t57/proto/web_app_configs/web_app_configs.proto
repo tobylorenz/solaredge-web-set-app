@@ -1,0 +1,40 @@
+syntax = "proto2";
+
+package web_app_configs;
+
+import "general_types/general_types.proto";
+import "web_region/web_region.proto";
+
+message WebAppConfigs {
+  optional MainMenu main_menu = 1;
+  optional web_region.Region.Languages language = 2;
+  optional general_types.ProductType product_type = 3;
+  optional EntryWizard entry_wizard = 4;
+
+  enum EntryWizard {
+    NONE = 0;
+    RESTORE_ENERGY_COUNTER = 1;
+  }
+
+  message MainMenu {
+    optional bool country_and_language = 1;
+    optional bool pairing = 2;
+    optional bool communication = 3;
+    optional bool power_control = 4;
+    optional bool device_manager = 5;
+    optional bool maintenance = 6;
+    optional bool information = 7;
+    optional bool central_settings = 8;
+    optional bool status = 9;
+    optional bool grid_protection = 10;
+    optional bool monitoring_comm = 11;
+    optional bool device_manager_energy_net = 12;
+  }
+}
+
+enum AppModes {
+  COMMISSIONING = 0;
+  VIEW_ONLY = 1;
+  MONITORING_ONLY = 2;
+  MYSOLAREDGE = 3;
+}

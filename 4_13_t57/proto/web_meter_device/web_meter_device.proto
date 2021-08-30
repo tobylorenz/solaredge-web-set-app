@@ -1,0 +1,25 @@
+syntax = "proto2";
+
+import "devices_lib/devices_lib.proto";
+import "meter_configs/meter_configs.proto";
+import "meter_status/meter_status.proto";
+import "types/types.proto";
+
+message MeterCmd {
+  optional CmdType cmd_type = 1;
+  optional types.String uniq_meter_id = 2;
+  optional MeterData meter_data = 3;
+
+  enum CmdType {
+    GET_METER_DATA = 0;
+    POST_METER_CONFIGS = 1;
+  }
+}
+
+message MeterData {
+  optional devices_lib.DeviceInfo device_info = 1;
+  optional devices_lib.DeviceStatus device_status = 2;
+  optional devices_lib.DeviceConfigs device_configs = 3;
+  optional meter_configs.MeterConfigs meter_configs = 4;
+  optional meter_status.MeterStatus meter_status = 5;
+}

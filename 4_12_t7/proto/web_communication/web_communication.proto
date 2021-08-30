@@ -23,7 +23,7 @@ message Communication {
   optional types.Bool s_ok = 11;
   optional ServerChannelMethod server_channel_method = 12;
   optional sok_status.SokStatus sok_status = 13;
-  optional device_coupling.DeviceCoupling coupling_with_evs = 14;
+  optional device_coupling.DeviceCoupling coupling_with_evsa = 14;
   optional device_coupling.DeviceCoupling coupling_with_inverter = 15;
 
   enum ServerChannelMethod {
@@ -183,6 +183,7 @@ message Communication {
           optional types.String fw_version = 4;
         }
       }
+
       message EvCharger {
       }
     }
@@ -427,7 +428,7 @@ message Communication {
     message BatteryProfile {
       optional types.Uint32 identifier = 1;
       optional types.String name = 2;
-      optional BatteryType battery_type = 3 [default = UNKNOWN];
+      optional BatteryType battery_type = 3;
     }
   }
 }

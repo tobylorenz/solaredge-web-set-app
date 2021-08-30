@@ -8,8 +8,8 @@ import "types/types.proto";
 message DeviceCoupling {
   repeated DetectedDevice devices = 1;
   optional DetectedDevice coupled_device = 2;
-  optional CouplingCommand cmd = 3 [default = NONE];
-  optional CouplingStatus status = 4 [default = IDLE];
+  optional CouplingCommand cmd = 3;
+  optional CouplingStatus status = 4;
 
   enum CouplingCommand {
     NONE = 0;

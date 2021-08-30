@@ -1,0 +1,19 @@
+syntax = "proto2";
+
+package web_energy_restore;
+
+import "types/types.proto";
+
+message EnergyRestore {
+  optional Source source = 1;
+  optional types.Uint64 lifetimeProduction = 2;
+
+  enum Source {
+    NOT_REQUIRED = 0;
+    REQUIRED = 1;
+    RGM_METER = 2;
+    SERVER = 3;
+    SKIPPED = 4;
+    MANUALLY = 5;
+  }
+}

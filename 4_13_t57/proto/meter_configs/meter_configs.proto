@@ -1,0 +1,19 @@
+syntax = "proto2";
+
+package meter_configs;
+
+import "meter_lib/meter_lib.proto";
+import "types/types.proto";
+
+message MeterConfigs {
+  optional meter_lib.MeterFunction meter_function = 1;
+  optional meter_lib.MeterProtocol protocol = 2;
+  optional meter_lib.CtConfigurations ct_configurations = 3;
+  optional meter_lib.VtConfigurations vt_configurations = 4;
+  optional meter_lib.GridTopology grid_topology = 5;
+  optional meter_lib.MeterCommissioning commissioining = 6;
+  optional meter_lib.CtPhaseLoss ct_phase_loss = 7;
+  optional types.Uint32 pt_scaling = 8;
+  optional types.Bool modbus_termination_on = 9;
+  optional types.Bool is_input_orientation_direct = 10;
+}

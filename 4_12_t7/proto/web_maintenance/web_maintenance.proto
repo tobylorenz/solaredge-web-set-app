@@ -145,7 +145,7 @@ message Maintenance {
               optional types.FloatS vgmin = 2;
               optional types.FloatS fgmax = 3;
               optional types.FloatS fgmin = 4;
-              optional types.Uint32 hold_time = 5;
+              optional types.Uint32 holdtime = 5;
             }
 
             message ResultsValues {

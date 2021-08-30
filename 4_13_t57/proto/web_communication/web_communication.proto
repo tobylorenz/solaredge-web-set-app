@@ -1,0 +1,428 @@
+syntax = "proto2";
+
+package web_communication;
+
+import "device_coupling/device_coupling.proto";
+import "general_types/general_types.proto";
+import "hg2/hg2.proto";
+import "meter_lib/meter_lib.proto";
+import "meter_status/meter_status.proto";
+import "sok_status/sok_status.proto";
+import "types/types.proto";
+import "zigbee/zigbee.proto";
+
+message Communication {
+  optional ServerChannel server_channel = 1;
+  optional Lan lan = 2;
+  optional Rs485 rs4851 = 3;
+  optional Rs485 rs4852 = 4;
+  optional Zigbee zigbee = 5;
+  optional Wifi wifi = 6;
+  optional Cellular cellular = 7;
+  optional Gpio gpio = 8;
+  optional ModbusTcpPort modbus_tcp_port = 9;
+  optional Battery48V battery48v = 10;
+  optional types.Bool s_ok = 11;
+  optional ServerChannelMethod server_channel_method = 12;
+  optional sok_status.SokStatus sok_status = 13;
+  optional device_coupling.DeviceCoupling coupling_with_evsa = 14;
+  optional device_coupling.DeviceCoupling coupling_with_inverter = 15;
+
+  enum ServerChannelMethod {
+    MANUAL_SELECT = 0;
+    AUTO_SELECT = 1;
+  }
+
+  message ServerChannel {
+    optional types.Bool lan = 1;
+    optional types.Bool cellular = 2;
+    optional types.Bool wifi = 3;
+    optional types.Bool rs4851_se_slave = 4;
+    optional types.Bool zigbee_slave = 5;
+    optional types.Bool rs4852_se_slave = 6;
+  }
+
+  message Lan {
+    optional types.Bool dhcp = 1;
+    optional Ip ip = 2;
+    optional types.String mac = 3;
+    optional types.Bool cable_connected = 4;
+    optional types.Bool ap_ip_change = 5;
+
+    message Ip {
+      optional types.String ip_address = 1;
+      optional types.String subnet_mask = 2;
+      optional types.String gateway = 3;
+      optional types.String dns = 4;
+    }
+  }
+
+  message Rs485 {
+    optional Protocol protocol = 1;
+    optional SlaveDetect slave_detect = 2;
+    repeated Slave slaves = 3;
+    repeated ModbusDevice modbus_devices = 4;
+    optional ModbusDeviceOptions modbus_options = 5;
+    optional ModbusDeviceRemove modbus_remove = 6;
+    optional types.Uint32 device_id = 7;
+    optional Baudrate baudrate = 8;
+
+    message Protocol {
+      optional types.Bool se_slave = 1;
+      optional types.Bool se_master = 2;
+      optional types.Bool modbus_multi_devices = 3;
+      optional types.Bool sunspec = 4;
+      optional types.Bool none = 5;
+    }
+
+    message SlaveDetect {
+      optional types.Uint32 duration = 1;
+      optional types.Uint32 num_of_slaves = 2;
+      optional types.Uint32 num_of_loops = 3;
+      optional types.Uint32 max_num_of_loops = 4;
+      optional types.Bool stop = 5;
+    }
+
+    message Slave {
+      optional types.String id = 1;
+      optional general_types.Date date = 2;
+    }
+
+    message ModbusDevice {
+//      enum DevicesCase {
+//        DEVICES_NOT_SET = 0;
+//        METER = 1;
+//        BATTERY = 2;
+//        EV_CHARGER = 3;
+//      }
+
+      oneof devices {
+        Meter meter = 1;
+        Battery battery = 2;
+        EvCharger ev_charger = 3;
+      }
+
+      message SetDeviceID {
+        optional types.Uint32 current_device_id = 1;
+        optional types.Uint32 new_device_id = 2;
+      }
+
+      message Meter {
+        optional meter_lib.MeterFunction pb_function = 1;
+        optional Protocol protocol = 2;
+        optional types.Uint32 device_id = 3;
+        optional types.Uint32 ct_rating = 4;
+        optional GridTopology grid_topology = 5;
+        optional types.Uint32 pt_scaling = 6;
+        optional types.Uint32 device_index = 7;
+        optional Commissioning commissioning = 8;
+        optional types.Uint32 ct_rating_secondary = 9;
+        repeated types.Uint32 ct_rating_secondary_options = 10;
+        optional types.Uint32 vt_rating = 11;
+        optional types.Uint32 vt_rating_secondary = 12;
+        optional CtPhaseLoss ct_phase_loss = 13;
+        optional types.Uint32 production_ct_rating = 14;
+        optional types.Uint32 export_import_ct_rating = 15;
+        optional types.FloatS cable_gauge = 16;
+        optional general_types.MeasurementUnit cable_gauge_unit = 17;
+        optional types.Uint32 conduit_length = 18;
+        optional general_types.MeasurementUnit conduit_length_unit = 19;
+        optional meter_status.MeterStatus meter_status = 20;
+        optional types.Bool disable_remove = 21;
+        optional types.Bool modbus_termination_on = 22;
+        optional types.Bool is_input_orientation_direct = 23;
+
+        message Protocol {
+          optional types.Bool solaredge = 1;
+          optional types.Bool wattnode = 2;
+          optional types.Bool pro1_pro380 = 3;
+          optional types.Bool janitza = 4;
+        }
+
+        message GridTopology {
+          optional types.Bool wye = 1;
+          optional types.Bool delta = 2;
+        }
+
+        message Commissioning {
+          optional SetDeviceID serial_conf = 1;
+          optional SetDeviceID set_id = 2;
+        }
+
+        message CtPhaseLoss {
+          optional types.Bool ct1 = 1;
+          optional types.Bool ct2 = 2;
+          optional types.Bool ct3 = 3;
+          optional types.Bool l1 = 4;
+          optional types.Bool l2 = 5;
+          optional types.Bool l3 = 6;
+        }
+      }
+
+      message Battery {
+        optional Protocol protocol = 1;
+        optional BatteryInfo battery_information = 2;
+        optional types.Uint32 device_id = 3;
+        optional types.Uint32 device_index = 4;
+
+        message Protocol {
+          optional types.Bool lg = 1;
+          optional types.Bool t74 = 2;
+        }
+
+        message BatteryInfo {
+          optional types.String serial_number = 1;
+          optional types.String model = 2;
+          optional types.FloatS nameplate = 3;
+          optional types.String fw_version = 4;
+        }
+      }
+
+      message EvCharger {
+      }
+    }
+
+    message ModbusDeviceOptions {
+        optional types.Bool meter = 1;
+        optional types.Bool battery = 2;
+        optional types.Bool ev_charger = 3;
+    }
+
+    message ModbusDeviceRemove {
+      optional ModbusDeviceOptions device_type = 1;
+      optional types.Uint32 device_index = 2;
+    }
+
+    message Baudrate {
+      optional types.Bool rate9600 = 1;
+      optional types.Bool rate19200 = 2;
+      optional types.Bool rate38400 = 3;
+      optional types.Bool rate57600 = 4;
+      optional types.Bool rate115200 = 5;
+    }
+  }
+
+  message Wifi {
+    repeated Network discoverd_networks = 1;
+    optional Network chosen_network = 2;
+    optional ConnectionStatus status = 3;
+    optional types.Uint32 wps_duration = 4;
+    optional WifiConfigurations wifi_configurations = 5;
+    optional Hg2ConnProcess hg2_conn_process = 6;
+    optional types.Bool ext_antenna = 7;
+    optional types.Uint32 wps_current_duration = 8;
+
+    enum ConnectionStatus {
+      NONE = 0;
+      CONNECTED = 1;
+      IN_PROGRESS = 2;
+      DISCONNECTED = 3;
+      WPS_DISCOVERY = 4;
+      ERROR_PASSWORD = 5;
+      ERROR_DHCP = 6;
+      ERROR_COMMUNICATION = 7;
+      ERROR_OTHER = 8;
+      ERROR_UNREACHABLE = 9;
+    }
+
+    message Network {
+      optional types.String name = 1;
+      optional types.String password = 2;
+      optional SignalStrength signal_strength = 3;
+      optional types.Bool password_needed = 4;
+      optional types.Bool secured = 5;
+      optional types.Bool saved = 6;
+
+      enum SignalStrength {
+        NONE = 0;
+        LOW = 1;
+        MID = 2;
+        HIGH = 3;
+        EXCELLENT = 4;
+      }
+    }
+
+    message WifiConfigurations {
+      optional types.Bool station = 1;;
+      optional types.Bool wps = 2;
+      optional types.Bool hg = 3;
+    }
+
+    message Hg2ConnProcess {
+      optional Hg2ConnStatus status = 1;
+      optional types.String ssid = 2;
+      optional types.String sn = 3;
+      optional hg2.HgCommTest comm_test = 4;
+
+      enum Hg2ConnStatus {
+        NONE = 0;
+        SAVED_DATA = 1;
+        PENDING = 2;
+        IN_PROGRESS = 3;
+        CONNECTED = 4;
+        ERROR_UNREACHABLE = 5;
+        ERROR_PASSWORD = 6;
+        ERROR_INTERNAL = 7;
+        ERROR_OTHER = 8;
+      }
+    }
+  }
+
+  message Cellular {
+    optional DataPlan data_plan = 1;
+    optional Configurations configurations = 2;
+    optional GSMStatus gsm_status = 3;
+    optional SignalStrength signal_strength = 4;
+    optional types.String operator = 5;
+    optional Info modem_info = 6;
+    optional GSMGeneral gsm_general = 7;
+    optional GSMRegistrationStatus registration_status = 8;
+
+    enum GSMStatus {
+      GSM_STATUS_OK = 0;
+      GSM_STATUS_COMM_ERROR = 1;
+      GSM_STATUS_NO_SIGNAL = 2;
+      GSM_STATUS_ENTER_APN = 4;
+      GSM_STATUS_NOT_REGISTERED = 8;
+      GSM_STATUS_ENTER_PIN = 16;
+      GSM_STATUS_NO_SIM_CARD = 32;
+      GSM_STATUS_NOT_ACTIVATED = 64;
+      GSM_STATUS_NO_MODEM = 128;
+      GSM_STATUS_UNKNOWN_FAILURE = 256;
+      GSM_STATUS_IN_PROGRESS = 257;
+    }
+
+    enum GSMGeneral {
+      GSM_GENERAL_OK = 0;
+      GSM_GENERAL_PPP_DOWN = 1;
+    }
+
+    enum SignalStrength {
+      NONE = 0;
+      LOWEST = 1;
+      LOW = 2;
+      MEDIUM = 3;
+      HIGH = 4;
+      HIGHEST = 5;
+      UNKNOWN = 6;
+    }
+
+    enum GSMRegistrationStatus {
+      GSM_REG_STAT_NOT_REGISTERED = 0;
+      GSM_REG_STAT_REGISTERED = 1;
+      GSM_REG_STAT_SEARCHING_NETWORK = 2;
+      GSM_REG_STAT_REGISTRATION_DENIED = 3;
+      GSM_REG_STAT_UNKNOWN = 4;
+      GSM_REG_STAT_REGISTERED_ROAMING = 5;
+    }
+
+    message DataPlan {
+      optional types.Bool high = 1;
+      optional types.Bool low_auto = 2;
+      optional types.Bool low_manual = 3;
+      optional GSMActivationStatus activation_status = 4;
+
+      enum GSMActivationStatus {
+        GSM_ACTIVATION_STATUS_OK = 0;
+        GSM_ACTIVATION_STATUS_FAILED_NO_RESPONSE_FROM_SERVER = 1;
+        GSM_ACTIVATION_STATUS_FAILED_UNIDENTIFIED_NUM = 2;
+        GSM_ACTIVATION_STATUS_FAILED_SMS_BLOCKED = 3;
+        GSM_ACTIVATION_STATUS_FAILED_NO_SMS_RESPONSE = 4;
+        GSM_ACTIVATION_STATUS_FAILED_NOT_ACTIVATED = 5;
+      }
+    }
+    message Configurations {
+      optional types.String apn = 1;
+      optional types.String username = 2;
+      optional types.String password = 3;
+      optional types.String pin = 4;
+      optional types.String phone_num = 5;
+    }
+
+    message Info {
+      optional types.String gsm_imsi = 1;
+      optional types.String gsm_imei = 2;
+      optional types.String cdma_meid = 3;
+      optional types.String model = 4;
+      optional types.String fw_version = 5;
+    }
+  }
+
+  message Gpio {
+    optional Pri pri = 1;
+    optional S0Meter s0_meter = 2;
+    optional DeviceType device_type = 3;
+
+    message DeviceType {
+      optional types.Bool none = 1;
+      optional types.Bool pri = 2;
+      optional types.Bool external_generator = 3;
+      optional types.Bool s0_meter = 4;
+    }
+
+    message Pri {
+      optional types.Bool disable = 1;
+      optional types.Bool rrcr = 2;
+      optional types.Bool ac_relay = 3;
+      optional types.Bool rrcr_ac_relay = 4;
+      optional types.Bool drm = 5;
+      optional types.Bool external_generator = 6;
+      optional types.Bool freq_control = 7;
+    }
+
+    message S0Meter {
+      optional Function pb_function = 1;
+      optional types.Uint32 configuration = 2;
+
+      message Function {
+        optional types.Bool m_export = 1;
+        optional types.Bool consumption = 2;
+        optional types.Bool m_import = 3;
+        optional types.Bool none = 4;
+      }
+    }
+  }
+
+  message ModbusTcpPort {
+    optional types.Bool enabled = 1;
+    optional types.Uint32 port = 2;
+  }
+
+  message Zigbee {
+//    enum DeviceStateCase {
+//      DEVICE_STATE_NOT_SET = 0;
+//      ZIGBEE_SLAVE_STATUS = 5;
+//      HA_STATUS = 6;
+//    }
+
+    optional zigbee.ModuleInfo module_info = 1;
+    optional zigbee.ModuleConfigs module_configs = 2;
+    optional zigbee.OperationMode operation_mode = 3;
+    repeated zigbee.Device devices = 4;
+    oneof device_state {
+      zigbee.SlaveStatus zigbee_slave_status = 5;
+      zigbee.HAStatus ha_status = 6;
+    }
+    optional zigbee.ModuleStatus module_status = 7;
+  }
+
+  message Battery48V {
+    optional BatteryProfile selected_profile = 1;
+    repeated BatteryProfile se_profiles = 2;
+    optional types.Bool outage_prevention = 3;
+
+    enum BatteryType {
+      UNKNOWN = 0;
+      LG = 1;
+      BYD_LV = 2;
+      BYD_LVS = 3;
+      GREENROCK = 4;
+    }
+
+    message BatteryProfile {
+      optional types.Uint32 identifier = 1;
+      optional types.String name = 2;
+      optional BatteryType battery_type = 3;
+    }
+  }
+}

@@ -6,7 +6,7 @@ import "general_types/general_types.proto";
 import "types/types.proto";
 
 message ErrorsLogger {
-  optional uint32 controller_id = 1;
+  optional uint32 controllerid = 1;
   optional uint32 subsystem = 2;
   repeated Error errors = 3;
   optional types.String controller_id_string = 4;

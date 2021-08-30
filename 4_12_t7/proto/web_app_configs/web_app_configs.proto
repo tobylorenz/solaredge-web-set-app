@@ -9,7 +9,7 @@ message WebAppConfigs {
   optional MainMenu main_menu = 1;
   optional web_region.Region.Languages language = 2;
   optional general_types.ProductType product_type = 3;
-  optional EntryWizard entry_wizard = 4 [default = NONE];
+  optional EntryWizard entry_wizard = 4;
 
   enum EntryWizard {
     NONE = 0;

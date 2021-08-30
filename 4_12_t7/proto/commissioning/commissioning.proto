@@ -5,6 +5,7 @@ package commissioning;
 import "general_types/general_types.proto";
 import "monitoring_details_package/monitoring_details_package.proto";
 import "pre_commissioning/pre_commissioning.proto";
+import "types/types.proto";
 
 message Notification {
   optional pre_commissioning.PreCommBanner pre_commissioning = 1;
@@ -16,7 +17,7 @@ message Status {
   optional UpgradeStatus upgrade_status = 3;
   optional uint32 total_time = 4;
   optional uint32 total_progress = 5;
-  optional DeviceMode device_mode = 6 [default = COMMISSIONING];
+  optional DeviceMode device_mode = 6;
   optional Notification notification = 7;
 
   enum FileStatus {
@@ -134,7 +135,7 @@ message IsReady {
 }
 
 message Communication {
-  optional bool sOk = 1;
+  optional bool s_ok = 1;
   optional bool internal_connection = 2;
   optional general_types.DateTime last_connection = 3;
   optional uint32 reconnect_timeout = 4;
@@ -200,11 +201,11 @@ message KeepAlive {
 
 message CentralCommissioning {
   repeated Slave slaves = 1;
-  optional string scanning_end_url = 2;
+  optional types.String scanning_end_url = 2;
 
   message Slave {
-    optional string sn = 1;
-    optional bool scan_only = 2;
+    optional types.String sn = 1;
+    optional types.Bool scan_only = 2;
   }
 }
 

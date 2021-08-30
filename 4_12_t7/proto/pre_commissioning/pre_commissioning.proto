@@ -12,7 +12,7 @@ message PreCommBanner {
 }
 
 message PreCommStatus {
-  optional DCStatus dc_status = 1 [default = IDLE];
+  optional DCStatus dc_status = 1;
   optional types.FloatS unified_dc_voltage = 2;
   repeated Unit units = 3;
   optional types.Uint32 dc_increase_current_sec = 4;
@@ -28,8 +28,8 @@ message PreCommStatus {
 
   message Unit {
     optional types.String sn = 1;
-    optional UnitStatus status = 2 [default = IDLE];
-    optional general_types.Position position = 3 [default = UNKNOWN];
+    optional UnitStatus status = 2;
+    optional general_types.Position position = 3;
     optional types.FloatS dc_voltage = 4;
 
     enum UnitStatus {

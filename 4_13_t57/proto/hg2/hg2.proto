@@ -1,0 +1,182 @@
+syntax = "proto2";
+
+package hg2;
+
+import "general_types/general_types.proto";
+import "types/types.proto";
+
+message WiFiConf {
+  optional types.String sn = 1;
+  optional types.String ssid = 2;
+  optional types.String password = 3;
+  optional AuthType auth_type = 4;
+  optional types.String pn = 5;
+  optional general_types.ProductType product_type = 6;
+
+  enum AuthType {
+    SEC_INVALID = 0;
+    SEC_NONE = 1;
+    SEC_WPA_PSK = 2;
+    SEC_WEP = 3;
+    SEC_802_1X = 4;
+  }
+}
+
+message WifiList {
+  repeated WiFiConf repeaters = 1;
+  optional WiFiConf gateway = 2;
+}
+
+message Status {
+  optional types.String host_mac = 1;
+  optional types.String host_ssid = 2;
+  optional types.Int32 host_rssi = 3;
+  optional State state = 4;
+  optional Error error = 5;
+  optional WiFiConf device_error = 6;
+
+  enum State {
+    HG_STATE_UNKNOWN = 0;
+    HG_STATE_NOT_CONFIGURED = 1;
+    HG_STATE_CONNECTING_TO_HOST = 2;
+    HG_STATE_CONNECTED_TO_HOST = 3;
+  }
+
+  enum Error {
+    HG_ERR_NONE = 0;
+    HG_ERR_UNREACHABLE_HOST = 1;
+    HG_ERR_CONNECTION_TO_HOST_FAILED = 2;
+    HG_ERR_GATEWAY_NO_IP = 3;
+    HG_ERR_DHCP_ERROR = 4;
+    HG_ERR_NO_COMMUNICTION = 5;
+    HG_ERR_INTERNAL = 6;
+    HG_ERR_WRONG_PASSWORD = 7;
+  }
+}
+
+message HgCommTest {
+  optional CommTestStatus repeater1_connection = 1;
+  optional CommTestStatus repeater2_connection = 2;
+  optional CommTestStatus homegateway_connection = 3;
+  optional CommTestStatus physical_connection = 4;
+  optional CommTestStatus ip_address = 5;
+  optional CommTestStatus gateway_link = 6;
+  optional CommTestStatus internet_link = 7;
+  optional CommTestStatus monitoring_link = 8;
+  optional CommTestStatus s_ok = 9;
+
+  enum CommTestStatus {
+    FAILED = 0;
+    PASSED = 1;
+    NOT_TESTED = 2;
+  }
+}
+
+message GlobalStatus {
+  repeated Repeater repeater = 1;
+  optional types.String gateway_ssid = 2;
+
+  message Repeater {
+    optional Status status = 1;
+    optional types.String sn = 2;
+  }
+}
+
+message DeviceIdentityMinimal {
+  optional types.Bool is_activated = 1;
+  optional general_types.ProductFamily product_family = 2;
+  optional general_types.ProductType product_type = 3;
+  optional types.String serial_number = 4;
+  optional types.String mac = 5;
+  optional general_types.Version version = 6;
+}
+
+message ResetTestMode {
+  optional types.Uint32 magic_key = 1;
+}
+
+message UpgradeFromUrl {
+  optional types.String url = 1;
+}
+
+message UdpCommunication {
+//  enum TypesCase {
+//    TYPES_NOT_SET = 0;
+//    UDPRSP = 3;
+//    UDPCMD = 4;
+//  }
+
+  optional types.String src_sn = 1;
+  optional types.String dst_sn = 2;
+  oneof types {
+    UdpRsp udprsp = 3;
+    UdpCmd udpcmd = 4;
+  }
+
+  message UdpRsp {
+//    enum TypesCase {
+//      TYPES_NOT_SET = 0;
+//      EMPTYRESP = 1;
+//      STATUS = 2;
+//      DEVICE_IDENTITY = 3;
+//      HG_COMM_TEST = 4;
+//    }
+
+    oneof types {
+      EmptyResp emptyresp = 1;
+      Status status = 2;
+      DeviceIdentityMinimal device_identify = 3;
+      HgCommTest hg_comm_test = 4;
+    }
+
+    enum EmptyResp {
+      ACK = 0;
+      NACK = 1;
+    }
+  }
+  message UdpCmd {
+//    enum TypesCase {
+//      TYPES_NOT_SET = 0;
+//      EMPTYCMD = 1;
+//      WIFILIST = 2;
+//      WIFICONF = 3;
+//      UPGRADE_FROM_URL = 4;
+//      RESETTESTMODE = 5;
+//    }
+
+    oneof types {
+      EmptyCmd emptycmd = 1;
+      WifiList wifilist = 2;
+      WiFiConf wificonf = 3;
+      UpgradeFromUrl upgrade_from_url = 4;
+      ResetTestMode resettestmode = 5;
+    }
+
+    enum EmptyCmd {
+      COMMAND_NONE = 0;
+      COMMAND_STATUS = 1;
+      COMMAND_GET_IDENTITY = 2;
+      COMMAND_FACTORY_RESET = 3;
+      COMMAND_SELF_TEST = 4;
+      COMMAND_REBOOT_DEVICE = 5;
+      COMMAND_START_HG_COMM_TEST = 6;
+      COMMAND_GET_HG_COMM_TEST = 7;
+    }
+  }
+}
+
+message DevicesData {
+  repeated Device devices = 1;
+  optional types.String gateway_ssid = 2;
+
+  message Device {
+    optional types.String mac = 1;
+    optional types.String sn = 2;
+    optional DeviceType device_type = 3;
+  }
+
+  enum DeviceType {
+    GATEWAY = 0;
+    REPEATER = 1;
+  }
+}

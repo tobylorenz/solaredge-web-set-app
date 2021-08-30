@@ -410,7 +410,7 @@ message Communication {
     message BatteryProfile {
       optional types.Uint32 identifier = 1;
       optional types.String name = 2;
-      optional Manufacturer manufacturer = 3 [default = UNKNOWN];
+      optional Manufacturer manufacturer = 3;
     }
   }
 }

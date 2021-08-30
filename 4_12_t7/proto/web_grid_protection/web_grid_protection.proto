@@ -18,7 +18,7 @@ message GridProtection {
 
   message Trip {
     optional types.FloatS value = 1;
-    optional types.Uint32 hold_time = 2;
+    optional types.Uint32 holdtime = 2;
   }
 
   message GridProtectionLogin {
