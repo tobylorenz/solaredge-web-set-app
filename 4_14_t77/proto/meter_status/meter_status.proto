@@ -1,0 +1,27 @@
+syntax = "proto2";
+
+package meter_status;
+
+import "general_types/general_types.proto";
+import "meter_lib/meter_lib.proto";
+import "types/types.proto";
+
+message PhaseStatus {
+  optional meter_lib.PowerDirection power_direction = 1;
+  optional meter_lib.PhaseError error = 2;
+  optional types.FloatS current = 3;
+  optional types.FloatS voltage = 4;
+  optional types.FloatS power = 5;
+}
+
+message MeterStatus {
+  optional types.String sn = 1;
+  optional meter_lib.MeterFunction meter_function = 2;
+  optional meter_lib.MeterError error = 3;
+  optional general_types.SubsystemError error_code = 4;
+  optional PhaseStatus phase1 = 5;
+  optional PhaseStatus phase2 = 6;
+  optional PhaseStatus phase3 = 7;
+  optional types.FloatS total_power = 8;
+  optional types.FloatS total_energy = 9;
+}

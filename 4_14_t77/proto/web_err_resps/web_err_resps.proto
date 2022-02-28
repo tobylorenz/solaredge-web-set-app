@@ -1,0 +1,73 @@
+syntax = "proto2";
+
+package web_err_resps;
+
+import "central_settings_errors/central_settings_errors.proto";
+import "general_errors/general_errors.proto";
+import "import_limit_errors/import_limit_errors.proto";
+import "inverter_errors/inverter_errors.proto";
+import "meter_errors/meter_errors.proto";
+import "storedge_errors/storedge_errors.proto";
+import "types/types.proto";
+
+message BadRequest {
+//  enum ErrorsCase {
+//    ERRORS_NOT_SET = 0;
+//    GENERAL_ERROR = 2;
+//  }
+
+  optional types.String description = 1;
+  oneof errors {
+    general_errors.BadRequest general_error = 2;
+  }
+}
+
+message Unauthorized {
+//  enum ErrorsCase {
+//    ERRORS_NOT_SET = 0;
+//    GENERAL_ERROR = 2;
+//  }
+
+  optional types.String description = 1;
+  oneof errors {
+    general_errors.Unauthorized general_error = 2;
+  }
+}
+
+message Forbidden {
+//  enum ErrorsCase {
+//    ERRORS_NOT_SET = 0;
+//    GENERAL_ERROR = 2;
+//    METER_ERROR = 3;
+//    STOREDGE_ERROR = 4;
+//    CENTRAL_SETTINGS_ERROR = 5;
+//    IMPORT_LIMIT_ERROR = 6;
+//  }
+
+  optional types.String description = 1;
+  oneof errors {
+    general_errors.Forbidden general_error = 2;
+    meter_errors.Forbidden meter_error = 3;
+    storedge_errors.Forbidden storedge_error = 4;
+    central_settings_errors.Forbidden central_settings_error = 5;
+    import_limit_errors.Forbidden import_limit_error = 6;
+  }
+}
+
+message InternalError {
+//  enum ErrorsCase {
+//    ERRORS_NOT_SET = 0;
+//    GENERAL_ERROR = 2;
+//    INVERTER_ERROR = 3;
+//    CENTRAL_SETTINGS_ERROR = 4;
+//    METER_ERROR = 5;
+//  }
+
+  optional types.String description = 1;
+  oneof errors {
+    general_errors.InternalError general_error = 2;
+    inverter_errors.InternalError inverter_error = 3;
+    central_settings_errors.InternalError central_settings_error = 4;
+    meter_errors.InternalError meter_error = 5;
+  }
+}

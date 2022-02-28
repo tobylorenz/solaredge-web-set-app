@@ -1,0 +1,27 @@
+syntax = "proto2";
+
+package mobile_web_api_package;
+
+import "types/types.proto";
+
+message OpenMobilePopup {
+  optional types.String dialog_name = 1;
+  optional types.String back_url = 2;
+  optional types.Bool ignore_dont_show = 3;
+}
+
+message MobilePopupStatus {
+  optional MobilePopupState state = 1;
+}
+
+message MobileDeviceInit {
+  optional types.String back_url = 1;
+  optional types.Int32 ap_timeout = 2;
+}
+
+enum MobilePopupState {
+  POPUP_UNAVAILABLE = 0;
+  POPUP_DONT_SHOW = 1;
+  POPUP_IS_OPEN = 2;
+  POPUP_CLOSED = 3;
+}
