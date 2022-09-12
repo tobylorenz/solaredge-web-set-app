@@ -1,0 +1,55 @@
+syntax = "proto2";
+
+package web_battery_group_manager;
+
+import "battery_association/battery_association.proto";
+import "battery_lib/battery_lib.proto";
+import "storage_configs/storage_configs.proto";
+import "types/types.proto";
+
+message BatteryGroupManager {
+  optional types.String group_id = 1;
+  optional InstallationStep installation_step = 2;
+  optional ManagerAction action_in_progress = 3;
+  repeated battery_lib.Battery batteries = 4;
+  optional battery_lib.BatteryStatus group_status = 5;
+  optional battery_association.BatteryAssociation battery_association = 6;
+  optional storage_configs.StorageConfigs storage_configs = 7;
+
+  enum InstallationStep {
+    STEP_NONE = 0;
+    STEP_ASSOCIATION = 1;
+    STEP_SELF_TEST = 2;
+    STEP_CONFIGURATIONS = 3;
+    STEP_BACKUP_TEST = 4;
+    STEP_END = 5;
+  }
+
+  enum ManagerAction {
+    NO_ACTION = 0;
+    ACTION_ASSOCIATION = 1;
+    ACTION_SELF_TEST = 2;
+    ACTION_CONFIGURATIONS = 3;
+    ACTION_BACKUP_TEST = 4;
+  }
+}
+
+message BatteryGroupManagerCmd {
+  optional CmdType cmd_type = 1;
+  optional types.String group_id = 2;
+  optional BatteryGroupManager.InstallationStep installation_step = 3;
+  optional storage_configs.StorageConfigs storage_configs = 4;
+
+  enum CmdType {
+    GET_BATTERY_GROUP_MANAGER_DATA = 0;
+    BATTERY_GROUP_SET_INSTALLATION_STEP = 1;
+    BATTERY_GROUP_ASSOCIATION_START = 2;
+    BATTERY_GROUP_ASSOCIATION_ABORT = 3;
+    BATTERY_GROUP_SELF_TEST_START_ALL = 4;
+    BATTERY_GROUP_SELF_TEST_START_LIST = 5;
+    BATTERY_GROUP_SELF_TEST_ABORT = 6;
+    BATTERY_GROUP_SET_MANAGER_CONFIGS = 7;
+    BATTERY_GROUP_BACKUP_TEST_START = 8;
+    BATTERY_GROUP_BACKUP_TEST_ABORT = 9;
+  }
+}

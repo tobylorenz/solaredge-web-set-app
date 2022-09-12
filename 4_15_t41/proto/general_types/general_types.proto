@@ -173,6 +173,11 @@ message MeasurementUnitSetting {
   repeated MeasurementUnit unit_options = 2;
 }
 
+message Temperature {
+  optional uint32 temp = 1;
+  optional MeasurementUnit unit = 2;
+}
+
 enum DeviceConnectionType {
   RF_CONNECTION_TYPE = 0;
   SERIAL_CONNECTION_TYPE = 1;
@@ -231,6 +236,7 @@ enum ControllerType {
   ORION_PLC_MNGR_RING0 = 49;
   ORION_PLC_MNGR_RING1 = 50;
   BMS_GG = 51;
+  SE_OEM_BMS = 52;
 }
 
 enum ProductFamily {

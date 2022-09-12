@@ -1,0 +1,8 @@
+syntax = "proto2";
+
+package inverter_errors;
+
+enum InternalError {
+  ERROR_INTERNAL_PID_ENABLE_FAILED = 0;
+  ERROR_INTERNAL_DCDC_CMD_EXECUTE = 1;
+}

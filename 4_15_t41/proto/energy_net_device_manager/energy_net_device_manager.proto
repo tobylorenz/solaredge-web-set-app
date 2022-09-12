@@ -1,0 +1,93 @@
+syntax = "proto2";
+
+package energy_net_device_manager;
+
+import "devices_lib/devices_lib.proto";
+import "general_types/general_types.proto";
+import "types/types.proto";
+
+message EnergyNetDeviceManager {
+  optional NetworkStatus network_status = 1;
+  optional general_types.ProgressInfo general_progress = 2;
+  repeated Device new_devices = 3;
+  repeated Device lately_joined_devices = 4;
+  repeated DeviceGroup lately_joined_groups = 5;
+  repeated Device installed_devices = 6;
+  repeated DeviceGroup installed_groups = 7;
+  repeated Device hidden_devices = 8;
+
+  enum NetworkStatus {
+    IDLE = 0;
+    ADDING_DEVICES = 1;
+    CHECK_UPGRADE = 2;
+    UPGRADING_DEVICES = 3;
+    ASSOCIATING_DEVICES = 4;
+  }
+
+  enum InstallationStatus {
+    NO_STATUS = 0;
+    NOT_JOINED = 1;
+    JOIN_IN_PROGRESS = 2;
+    JOIN_FAILED = 3;
+    UPGRADE_IN_PROGRESS = 4;
+    UPGRADE_FAILED = 5;
+    PENDING_CONFIGURATION = 6;
+    INSTALLED = 7;
+    CHECK_FOR_UPGRADE = 8;
+  }
+
+  message DeviceGroup {
+    optional types.String group_id = 1;
+    optional general_types.ProductType product_type = 2;
+    optional types.Uint32 num_of_devices = 3;
+    optional devices_lib.InstallationFlags installation_flags = 4;
+    optional InstallationStatus installation_status = 5;
+    optional general_types.ProgressInfo progress_info = 6;
+  }
+
+  message Device {
+    optional devices_lib.DeviceInfo device_info = 1;
+    optional devices_lib.DeviceStatus device_status = 2;
+    optional ActiveStatus active_state = 3;
+    optional Error error = 4;
+    optional devices_lib.InstallationFlags installation_flags = 5;
+    optional InstallationStatus installation_status = 6;
+    optional general_types.ProgressInfo progress_info = 7;
+    optional types.String group_id = 8;
+    optional devices_lib.DeviceConfigs device_configs = 9;
+
+    enum ActiveStatus {
+      NONE = 0;
+      ON = 1;
+      OFF = 2;
+    }
+
+    enum Error {
+      NO_ERROR = 0;
+      UNREACHABLE = 1;
+      GENERAL_ERROR = 2;
+    }
+  }
+}
+
+message EnergyDeviceManagerCmd {
+  optional Cmd command = 1;
+  repeated types.String devices_ids = 2;
+  repeated types.String hidden_devices_ids = 3;
+  optional types.String group_id = 4;
+  repeated types.String inverter_ids = 5;
+  optional devices_lib.BlinkLeds blink_leds = 6;
+
+  enum Cmd {
+    NO_CMD = 0;
+    ADD_DEVICES = 1;
+    RECOVER_DEVICES = 2;
+    REMOVE_DEVICES = 3;
+    FINISH_INSTALLATION = 4;
+    RESET_NETWORK_STATUS = 5;
+    BLINK_DEVICES_LED = 6;
+    STOP_ALL_BLINKS = 7;
+    TURN_DEVICE_OFF = 8;
+    TURN_DEVICE_ON = 9;
+  }
+}

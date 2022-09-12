@@ -1,0 +1,15 @@
+syntax = "proto2";
+
+package central_settings_errors;
+
+enum Forbidden {
+  ERROR_FORBIDDEN_INSUFFICIENT_MODBUS_ID = 0;
+  ERROR_FORBIDDEN_NO_AVAILABLE_PORT = 1;
+  ERROR_FORBIDDEN_NO_SLAVES = 2;
+}
+
+enum InternalError {
+  ERROR_INTERNAL_MODEL_DEFAULT = 0;
+  ERROR_INTERNAL_DSP_COMM = 1;
+  ERROR_INTERNAL_SAVE_FILE = 2;
+}

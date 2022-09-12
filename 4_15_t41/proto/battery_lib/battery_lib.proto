@@ -1,0 +1,54 @@
+syntax = "proto2";
+
+package battery_lib;
+
+import "devices_lib/devices_lib.proto";
+import "types/types.proto";
+
+message BatteryProtocol {
+  optional types.Bool lg = 1;
+  optional types.Bool t74 = 2;
+  optional types.Bool solaredge = 3;
+}
+
+message BatteryInfo {
+  optional types.String model = 1;
+  optional types.FloatS nameplate = 2;
+  optional BatteryProtocol battery_protocol = 3;
+}
+
+message BatteryStatus {
+  optional BatteryState state = 1;
+  optional types.FloatS soe = 2;
+  optional types.FloatS power = 3;
+  optional BatteryFault fault = 5;
+}
+
+message Battery {
+  optional devices_lib.DeviceInfo device_info = 1;
+  optional devices_lib.DeviceStatus device_status = 2;
+  optional devices_lib.DeviceConfigs device_configs = 3;
+  optional BatteryInfo battery_info = 4;
+  optional BatteryStatus battery_status = 5;
+}
+
+enum BatteryState {
+  BMS_STATE_OFF = 0;
+  BMS_STATE_STDBY = 1;
+  BMS_STATE_INIT = 2;
+  BMS_STATE_CHARGE = 3;
+  BMS_STATE_DISCHARGE = 4;
+  BMS_STATE_FAULT = 5;
+  BMS_STATE_IDLE = 6;
+  BMS_STATE_COMM_ERROR = 7;
+  BMS_STATE_RESERVED1 = 8;
+  BMS_STATE_RESERVED2 = 9;
+  BMS_STATE_SLEEP = 10;
+}
+
+enum BatteryFault {
+  NO_FAULT = 0;
+  GENERAL_FAULT = 1;
+  MCB_FAULT = 2;
+  RSD_FAULT = 3;
+}

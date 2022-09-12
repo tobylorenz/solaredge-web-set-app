@@ -1,0 +1,23 @@
+syntax = "proto2";
+
+package features;
+
+import "types/types.proto";
+
+message IWS {
+  optional Configs configs = 1;
+  optional Status status = 2;
+
+  message Configs {
+    optional types.Bool iws_enabled = 1;
+  }
+
+  message Status {
+    optional types.Bool iws_in_progress = 1;
+    optional types.Bool iws_required = 2;
+  }
+}
+
+message Features {
+  optional IWS iws = 1;
+}

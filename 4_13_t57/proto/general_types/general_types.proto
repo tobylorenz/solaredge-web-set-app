@@ -170,7 +170,7 @@ message PublishPeriod {
 
 message MeasurementUnitSetting {
   optional MeasurementUnit current_unit = 1;
-  repeated MeasurementUnitSetting unit_options = 2;
+  repeated MeasurementUnit unit_options = 2;
 }
 
 enum DeviceConnectionType {

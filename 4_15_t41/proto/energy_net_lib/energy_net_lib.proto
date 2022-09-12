@@ -1,0 +1,25 @@
+syntax = "proto2";
+
+package energy_net_lib;
+
+import "types/types.proto";
+
+message EnergyNetStatus {
+  optional DetectionStatus detection_status = 1;
+  optional ModuleStatus module_status = 2;
+  optional types.Uint32 num_of_devices = 3;
+}
+
+enum DetectionStatus {
+  NOT_DETECTED = 0;
+  DETECTION_IN_PROGRESS = 1;
+  DETECTED_IN_ENERGY_NET_PORT = 2;
+  DETECTED_IN_CELLULAR_PORT = 3;
+}
+
+enum ModuleStatus {
+  MODULE_NO_STATUS = 0;
+  MODULE_IDLE = 1;
+  MODULE_NO_BAND_CONFIGS = 2;
+  MODULE_SOFTWARE_CORRUPTED = 3;
+}

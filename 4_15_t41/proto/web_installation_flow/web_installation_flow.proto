@@ -1,0 +1,41 @@
+syntax = "proto2";
+
+package web_installation_flow;
+
+message InstallationFlow {
+  optional InstallationStep current_step = 1;
+  repeated InstallationStep steps_order = 2;
+  optional InstallationStage current_stage = 3;
+  repeated InstallationStage stages_order = 4;
+
+  enum InstallationStep {
+    STEP_WELCOME_PAGE = 0;
+    STEP_MONITORING_COMMUNICATION = 1;
+    STEP_SITE_COMMUNICATION = 2;
+    STEP_DEVICE_MANAGER = 3;
+    STEP_COUNTRY = 4;
+    STEP_POWER_CONTROL = 5;
+    STEP_GRID_PROTECTION = 6;
+    STEP_PAIRING = 7;
+    STEP_COMMON_SETTINGS = 8;
+    STEP_ADDITIONAL_SETTINGS = 9;
+    STEP_CENTRAL_COMMISSIONING = 10;
+    STEP_TEST = 11;
+    STEP_SUMMARY = 12;
+  }
+
+  enum InstallationStage {
+    STAGE_WELCOME_PAGE = 0;
+    STAGE_MONITORING_COMMUNICATION = 1;
+    STAGE_SYSTEM_AND_DEVICES = 2;
+    STAGE_COMMISSIONING = 3;
+    STAGE_CENTRAL_COMMISSIONING = 4;
+    STAGE_TEST = 5;
+    STAGE_SUMMARY = 6;
+  }
+}
+
+message InstallationFlowCmd {
+  optional InstallationFlow.InstallationStep installation_step = 1;
+  optional InstallationFlow.InstallationStage installation_stage = 2;
+}

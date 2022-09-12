@@ -1,0 +1,28 @@
+syntax = "proto2";
+
+package web_grid_protection;
+
+import "general_types/general_types.proto";
+import "types/types.proto";
+
+message GridProtection {
+  repeated Trip vg_max = 1;
+  repeated Trip vg_min = 2;
+  repeated Trip fg_max = 3;
+  repeated Trip fg_min = 4;
+  optional types.Uint32 grm_time = 5;
+  repeated Trip v_line_max = 6;
+  repeated Trip v_line_min = 7;
+  optional GridProtectionLogin grid_protection_login = 8;
+  optional general_types.Header header = 9;
+
+  message Trip {
+    optional types.FloatS value = 1;
+    optional types.Uint32 holdtime = 2;
+  }
+
+  message GridProtectionLogin {
+    optional types.String password = 1;
+    optional types.Bool logged_in = 2;
+  }
+}

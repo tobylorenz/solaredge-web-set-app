@@ -1,0 +1,110 @@
+syntax = "proto2";
+
+package devices_lib;
+
+import "general_types/general_types.proto";
+import "types/types.proto";
+
+message SignalQuality {
+  optional SignalStrength signal_strength = 1;
+  optional types.Int32 rssi = 2;
+}
+
+message BlinkLeds {
+  optional types.Bool reset_all_blinks = 1;
+}
+
+message SetModbusID {
+  optional types.Uint32 current_id = 1;
+  optional types.Uint32 new_id = 2;
+  optional types.Bool set_enabled = 3;
+  optional types.Uint32.Uint32Atr allowed_in_range = 4;
+}
+
+message SetDeviceName {
+  optional types.String default_name = 1;
+  optional types.String saved_name = 2;
+  optional types.Uint32 max_length = 3;
+  optional types.Bool edit_enabled = 4;
+}
+
+message DeviceAssociation {
+  optional types.Bool is_associated = 1;
+  optional types.String associated_to = 2;
+  repeated types.String available_devices = 3;
+}
+
+message DeviceAvailableUpgrade {
+  repeated general_types.Controller controllers_with_upgrade = 1;
+}
+
+message DeviceInfo {
+  optional general_types.Device device = 1;
+  optional types.String uniq_id = 2;
+  optional types.String sn = 3;
+  optional types.String model = 4;
+  optional types.String hw_address = 5;
+  optional DeviceChannel channel = 6;
+}
+
+message DeviceStatus {
+  optional DeviceAvailableUpgrade available_upgrade = 1;
+  optional types.Bool communicating = 2;
+  optional general_types.DateTime last_communication = 3;
+  optional SignalQuality device_signal = 4;
+  optional types.Bool led_is_blinking = 5;
+  optional OnOffState on_off_state = 6;
+}
+
+message RemoveDeviceSettings {
+  optional types.Bool enabled = 1;
+  optional RemoveDeviceWarning warning = 2;
+
+  enum RemoveDeviceWarning {
+    NONE = 0;
+    WARNING_IMPORT_LIMIT_ENABLED = 1;
+  }
+}
+
+message DeviceConfigs {
+  optional SetModbusID modbus_id = 1;
+  optional SetDeviceName name = 2;
+  optional DeviceAssociation association = 3;
+  optional types.Bool remove_enabled = 4;
+  optional types.Bool blink_enabled = 5;
+  optional RemoveDeviceSettings remove_settings = 6;
+}
+
+message InstallationFlags {
+  optional bool has_mandatory_actions = 1;
+  optional bool configured = 2;
+  optional bool installation_done = 3;
+}
+
+enum DeviceChannel {
+  CONNECTION_TYPE_NONE = 0;
+  RS485_1 = 1;
+  RS485_2 = 2;
+  SUBG = 3;
+  CAN = 4;
+  S0 = 5;
+  ZIGBEE = 6;
+  ETHERNET = 7;
+}
+
+enum SignalStrength {
+  NONE = 0;
+  LOW = 1;
+  MID = 2;
+  HIGH = 3;
+  EXCELLENT = 4;
+  POOR = 5;
+}
+
+enum OnOffState {
+  STATE_NONE = 0;
+  OFF = 1;
+  OFF_IN_PROGRESS = 2;
+  ON = 3;
+  ON_IN_PROGRESS = 4;
+}

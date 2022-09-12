@@ -1,0 +1,94 @@
+syntax = "proto2";
+
+package web_central_settings;
+
+import "general_types/general_types.proto";
+import "types/types.proto";
+
+message CentralSettings {
+  optional types.Bool is_done = 1;
+  optional Status status = 2;
+  optional general_types.ProgressInfo progress = 3;
+  repeated Slave slaves = 4;
+  optional SettingProgress current_setting_progress = 5;
+  optional general_types.Date last_update = 6;
+  optional types.Bool has_master = 7;
+  optional types.Bool is_blinking = 8;
+
+  enum Status {
+    NONE = 0;
+    NO_AVAILABLE_PORT_FOR_MASTER = 1;
+    IDLE_NO_SLAVES = 2;
+    IN_PROGRESS_SLAVE_DETECT = 3;
+    IDLE_SLAVES_DETECTED_NO_STATUS = 4;
+    IN_PROGRESS_CENTRAL_COMMISSIONING = 5;
+    IN_PROGRESS_COLLECTING_DATA = 6;
+    IDLE_SLAVES_DETECTED_STATUS = 7;
+  }
+
+  message Slave {
+    optional types.String sn = 1;
+    optional types.Bool communicating = 2;
+    optional general_types.Date last_communication = 3;
+    optional SlaveStatus status = 4;
+    optional types.String model = 5;
+    optional types.Uint32 modbus_id = 6;
+    optional Steps steps = 7;
+    optional types.Uint32 num_of_optimizers = 8;
+    optional types.Bool select_enable = 9;
+    optional Warning warning = 10;
+
+    enum SlaveStatus {
+      NO_STATUS = 0;
+      NOT_PERFORMED = 1;
+      IN_PROGRESS_RETRY_PAIRING = 2;
+      IN_PROGRESS_COMMISSIONING = 3;
+      SUCCESS = 4;
+      FAIL = 5;
+      MODEL_MISMATCH = 6;
+    }
+
+    enum Warning {
+      NO_WARNING = 0;
+      INV_OFF = 1;
+      INV_NIGHT_MODE = 2;
+      INV_OFF_GRID = 3;
+      RE_PAIRING_FAILED = 4;
+      INV_LOCKED = 5;
+    }
+
+    message Steps {
+      optional types.Bool fw_versions = 1;
+      optional types.Bool activation = 2;
+      optional types.Bool settings = 3;
+      optional types.Bool pairing = 4;
+    }
+  }
+
+  message SettingProgress {
+    optional types.Uint32 succeeded = 1;
+    optional types.Uint32 failed = 2;
+    optional types.Uint32 in_progress = 3;
+  }
+
+  message CentralSettingsCmd {
+    optional Cmd command = 1;
+    repeated types.String slavesToPair = 2;
+    repeated types.String slavesToSet = 3;
+    repeated types.String slavesToBlink = 4;
+
+    enum Cmd {
+      NO_CMD = 0;
+      START_CENTRAL_SLAVE_DETECT = 1;
+      STOP_CENTRAL_SLAVE_DETECT = 2;
+      START_COLLECTING_DATA = 3;
+      STOP_COLLECTING_DATA = 4;
+      START_CENTRAL_COMMISSIONING_ALL = 5;
+      START_CENTRAL_COMMISSIONING_SELECTED = 6;
+      STOP_CENTRAL_COMMISSIONING = 7;
+      START_INVERTERS_BLINK = 8;
+      STOP_INVERTERS_BLINK = 9;
+      NOTIFY_SCANNING_PROCESS_COMPLETED = 10;
+    }
+  }
+}
