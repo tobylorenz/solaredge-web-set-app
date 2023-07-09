@@ -1,0 +1,37 @@
+syntax = "proto2";
+
+package storage_lib;
+
+import "types/types.proto";
+
+message EnergyControl {
+  optional types.Bool msc = 1;
+  optional types.Bool tou = 2;
+  optional types.Bool backup_only = 3;
+  optional types.Bool disable = 4;
+  optional types.Bool remote = 5;
+}
+
+message GridCharge {
+  optional types.Bool enable = 1;
+  optional types.Bool maintenance_charge_only = 2;
+  optional types.Bool disable = 3;
+}
+
+message BackupConfigs {
+  optional types.Bool backup_enable = 1;
+  optional types.FloatS backup_reserved = 2;
+}
+
+message Ess {
+  optional OperationMode operation_mode = 1;
+  optional types.Bool lock_is_active = 2;
+  optional types.Uint32 timer_sec = 3;
+
+  message OperationMode {
+    optional types.Bool unrestricted = 1;
+    optional types.Bool export_only = 2;
+    optional types.Bool import_only = 3;
+    optional types.Bool no_exchange = 4;
+  }
+}

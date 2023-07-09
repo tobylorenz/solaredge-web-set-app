@@ -1,0 +1,44 @@
+syntax = "proto2";
+
+package smart_devices_lib;
+
+import "general_types/general_types.proto";
+import "types/types.proto";
+
+message SmartDeviceMeasurements {
+  optional types.FloatS input_voltage = 1;
+  optional types.FloatS input_frequency = 2;
+  optional types.FloatS output_voltage = 3;
+  optional types.FloatS output_current = 4;
+  optional types.FloatS power_factor = 5;
+  optional types.FloatS output_power = 6;
+  optional types.FloatS last_act_energy = 7;
+  optional types.FloatS life_time_energy = 8;
+  optional general_types.Temperature internal_ambient = 9;
+}
+
+message PowerRateConfig {
+  optional types.Uint32 power_rate = 1;
+}
+
+message OnTimesConfig {
+  optional types.Uint32 min_on_time = 1;
+}
+
+message ExportThresholdConfig {
+  optional types.Uint32 export_threshold = 1;
+}
+
+message SmartDeviceInfo {
+  optional types.Bool export_import_meter_configured = 1;
+}
+
+message SmartDeviceStatus {
+  optional SmartDeviceMeasurements measurements = 1;
+}
+
+message SmartDeviceConfigs {
+  optional PowerRateConfig power_rate_cofig = 1;
+  optional OnTimesConfig on_times_config = 2;
+  optional ExportThresholdConfig export_threshold_config = 3;
+}

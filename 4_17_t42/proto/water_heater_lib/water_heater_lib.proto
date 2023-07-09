@@ -1,0 +1,19 @@
+syntax = "proto2";
+
+package water_heater_lib;
+
+import "general_types/general_types.proto";
+import "types/types.proto";
+
+message WaterHeaterStatus {
+  optional general_types.Temperature temperature_sensor_a = 1;
+  optional general_types.Temperature temperature_sensor_b = 2;
+  optional types.Uint32 boost_time_left = 3;
+  optional SwitchState switch_state = 4;
+}
+
+enum SwitchState {
+  STATE_NONE = 0;
+  OFF = 1;
+  ON = 2;
+}

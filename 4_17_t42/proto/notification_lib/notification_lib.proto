@@ -1,0 +1,9 @@
+syntax = "proto2";
+
+package notification_lib;
+
+import "types/types.proto";
+
+message DcCommBanner {
+  optional types.Bool pv_commissioning = 1;
+}

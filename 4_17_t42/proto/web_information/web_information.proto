@@ -1,0 +1,36 @@
+syntax = "proto2";
+
+package web_information;
+
+import "general_types/general_types.proto";
+import "types/types.proto";
+
+message ErrorsLogger {
+  optional uint32 controllerid = 1;
+  optional uint32 subsystem = 2;
+  repeated Error errors = 3;
+  optional types.String controller_id_string = 4;
+
+  message Error {
+    optional uint32 error_code = 1;
+    optional general_types.Date start_time = 2;
+    optional types.String error_display_intro = 3;
+  }
+}
+
+message ControllersErrors {
+  repeated ErrorsLogger logger = 1;
+}
+
+message Information {
+  optional string sn = 1;
+  optional general_types.Version cpu = 2;
+  optional general_types.Version dsp1 = 3;
+  optional general_types.Version dsp2 = 4;
+  repeated types.MapStringToString hw_ids = 5;
+  repeated types.MapUintToUint error_log = 6;
+  repeated types.MapUintToUint warning_log = 7;
+  optional ControllersErrors errors = 8;
+  optional general_types.Version bui_version = 9;
+  repeated general_types.Controller controllers = 10;
+}

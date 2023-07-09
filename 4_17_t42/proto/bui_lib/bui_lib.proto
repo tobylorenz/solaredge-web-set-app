@@ -1,0 +1,36 @@
+syntax = "proto2";
+
+package bui_lib;
+
+import "types/types.proto";
+
+message Generator {
+  optional OperationMode operation_mode = 1;
+  optional SoeThreshold soe_threshold = 2;
+
+  message OperationMode {
+    optional types.Bool disable_mode = 1;
+    optional types.Bool manual_mode = 2;
+    optional types.Bool auto_mode = 3;
+  }
+
+  message SoeThreshold {
+    optional types.Bool is_auto = 1;
+    optional types.FloatS threshold = 2;
+    optional types.FloatS default_threshold = 3;
+  }
+}
+
+message BuiStatus {
+  optional OperationMode operation_mode = 1;
+}
+
+message BuiConfigs {
+  optional Generator generator = 1;
+}
+
+enum OperationMode {
+  INV_OPER_MODE_ON_GRID = 0;
+  INV_OPER_MODE_STORAGE_OFF_GRID = 1;
+  INV_OPER_MODE_DG_OFF_GRID = 2;
+}

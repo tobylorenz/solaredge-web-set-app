@@ -1,0 +1,19 @@
+syntax = "proto2";
+
+package dry_contact_lib;
+
+message OperationModeConfigs {
+  optional OperationMode current_mode = 1;
+  repeated OperationMode available_modes = 2;
+}
+
+message DryContactConfigs {
+  optional OperationModeConfigs operation_mode_configs = 1;
+}
+
+enum OperationMode {
+  OPERATION_MODE_NONE = 0;
+  OPERATION_MODE_GENERIC = 1;
+  OPERATION_MODE_SGR = 2;
+  OPERATION_MODE_HVAC_BLOCK = 3;
+}

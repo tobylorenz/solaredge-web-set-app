@@ -1,0 +1,40 @@
+syntax = "proto2";
+
+package web_water_heater;
+
+import "devices_lib/devices_lib.proto";
+import "smart_devices_lib/smart_devices_lib.proto";
+import "types/types.proto";
+import "water_heater_lib/water_heater_lib.proto";
+
+message WaterHeaterData {
+  optional InstallationStep installation_step = 1;
+  optional devices_lib.DeviceInfo device_info = 2;
+  optional devices_lib.DeviceStatus device_status = 3;
+  optional devices_lib.DeviceConfigs device_configs = 4;
+  optional smart_devices_lib.SmartDeviceInfo smart_device_info = 5;
+  optional smart_devices_lib.SmartDeviceStatus smart_device_status = 6;
+  optional smart_devices_lib.SmartDeviceConfigs smart_device_configs = 7;
+  optional water_heater_lib.WaterHeaterStatus water_heater_status = 8;
+
+  enum InstallationStep {
+    IDLE = 0;
+    STEP_CONFIGURATION = 1;
+    STEP_SELF_TEST = 2;
+    STEP_DONE = 3;
+  }
+}
+
+message WaterHeaterCmd {
+  optional CmdType cmd_type = 1;
+  optional types.String uniq_id = 2;
+  optional WaterHeaterData water_heater_data = 3;
+
+  enum CmdType {
+    NONE = 0;
+    GET_WATER_HEATER_DATA = 1;
+    POST_WATER_HEATER_DATA = 2;
+    TURN_ON_WATER_HEATER = 3;
+    TURN_OFF_WATER_HEATER = 4;
+  }
+}

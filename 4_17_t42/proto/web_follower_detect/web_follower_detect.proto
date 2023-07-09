@@ -1,0 +1,35 @@
+syntax = "proto2";
+
+package web_follower_detect;
+
+import "general_types/general_types.proto";
+import "types/types.proto";
+
+message FollowerDetect {
+  repeated Follower followers = 1;
+  optional Status status = 2;
+  optional general_types.ProgressInfo progress = 3;
+  optional types.Uint32 duration = 4;
+
+  enum Status {
+    IDEL = 0;
+    IN_PROGRESS = 1;
+    DONE = 2;
+  }
+
+  message Follower {
+    optional types.String id = 1;
+    optional general_types.Date date = 2;
+  }
+}
+
+message FollowerDetectCmd {
+  optional CmdType cmd_type = 1;
+
+  enum CmdType {
+    NONE = 0; 
+    FOLLOWER_DETECT_START_SHORT = 1;
+    FOLLOWER_DETECT_START_LONG = 2;
+    FOLLOWER_DETECT_ABORT = 3;
+  }
+}

@@ -1,0 +1,91 @@
+syntax = "proto2";
+
+package meter_lib;
+
+import "types/types.proto";
+
+message MeterFunction {
+  optional types.Bool inverter_production = 1;
+  optional types.Bool export_import = 2;
+  optional types.Bool consumption = 3;
+  optional types.Bool site_production = 4;
+  optional types.Bool external_production = 5;
+  optional types.Bool m_export = 6;
+  optional types.Bool m_import = 7;
+  optional types.Bool production_and_export_import = 8;
+  optional types.Bool no_function = 9;
+}
+
+message MeterProtocol {
+  optional types.Bool solaredge = 1;
+  optional types.Bool wattnode = 2;
+  optional types.Bool pro1Pro380 = 3;
+  optional types.Bool janitza = 4;
+  optional types.Bool schneider = 5;
+}
+
+message GridTopology {
+  optional types.Bool wye = 1;
+  optional types.Bool delta = 2;
+}
+
+message CtConfigurations {
+  optional types.Uint32 ct_rating = 1;
+  optional types.Uint32 ct_rating_secondary = 2;
+  repeated types.Uint32 ct_rating_secondary_options = 3;
+  optional types.Uint32 production_ct_rating = 4;
+  optional types.Uint32 export_import_ct_rating = 5;
+  optional types.Uint32 cable_gauge = 6;
+  optional types.Uint32 conduit_length = 7;
+}
+
+message VtConfigurations {
+  optional types.Uint32 vt_rating = 1;
+  optional types.Uint32 vt_rating_secondary = 2;
+}
+
+message CtPhaseLoss {
+  optional types.Bool ct1 = 1;
+  optional types.Bool ct2 = 2;
+  optional types.Bool ct3 = 3;
+  optional types.Bool l1 = 4;
+  optional types.Bool l2 = 5;
+  optional types.Bool l3 = 6;
+}
+
+message SetMeterID {
+  optional types.Uint32 current_device_id = 1;
+  optional types.Uint32 new_device_id = 2;
+}
+
+message MeterCommissioning {
+  optional SetMeterID serial_conf = 1;
+  optional SetMeterID set_id = 2;
+}
+
+enum PowerDirection {
+  DIRECTION_UNKNOWN = 0;
+  INVERTER_PRODUCTION = 1;
+  INVERTER_AC_CHARGE = 2;
+  EXPORT = 3;
+  IMPORT = 4;
+  CONSUMPTION = 5;
+  CONSUMPTION_REVERSED = 6;
+  SITE_PRODUCTION = 7;
+  SITE_PRODUCTION_REVERSED = 8;
+  EXTERNAL_PRODUCTION = 9;
+  EXTERNAL_PRODUCTION_REVERSED = 10;
+}
+
+enum PhaseError {
+  NO_PHASE_ERROR = 0;
+  CT_DISCONENCTED = 1;
+  PHASE_DISCONENCTED = 2;
+  CT_AND_PHASE_DISCONENCTED = 3;
+}
+
+enum MeterError {
+  NO_METER_ERROR = 0;
+  COMM_ERROR = 1;
+  INTERNAL_ERROR = 2;
+}

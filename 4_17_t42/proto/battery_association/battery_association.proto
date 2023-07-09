@@ -1,0 +1,21 @@
+syntax = "proto2";
+
+package battery_association;
+
+import "types/types.proto";
+
+message BatteryAssociation {
+  optional AssociationStatus association_status = 1;
+  optional types.Uint32 number_of_followers = 2;
+  optional types.Bool association_disabled = 3;
+  optional types.FloatS max_dc_voltage = 4;
+
+  enum AssociationStatus {
+    PENDING_ASSOCIATION = 0;
+    ASSOCIATION_IN_PROGRESS = 1;
+    ASSOCIATION_FAIL = 2;
+    ASSOCIATION_SUCCESS = 3;
+    ADDING_FOLLOWERS_TO_ENET = 4;
+    DC_DECREASE_IN_PROGRESS = 5;
+  }
+}

@@ -1,0 +1,330 @@
+syntax = "proto2";
+
+package web_power_control;
+
+import "storage_lib/storage_lib.proto";
+import "types/types.proto";
+
+message PowerControl {
+  optional GridControl grid_control = 1;
+  optional EnergyManager energy_manager = 2;
+  optional RRCR rrcr = 3;
+  optional ReactivePower reactive_power = 4;
+  optional ActivePower active_power = 5;
+  optional WakeupConfigs wakeup_configs = 6;
+  optional Advanced advanced = 7;
+  optional PhaseBalancer phase_balancer = 8;
+  optional ExternalGenerator external_generator = 9;
+
+  message GridControl {
+    optional types.Bool enable = 1;
+  }
+
+  message EnergyManager {
+    optional LimitControl limit_control = 1;
+    optional EnergyControl energy_control = 2;
+    optional Operation operation = 3;
+    optional Calendar calendar = 4;
+    optional StorageControl storage_control = 5;
+    optional Advanced advanced = 6;
+    optional BackupConf backup_conf = 7;
+    optional Ess ess = 8;
+    optional ImportLimit import_limit = 9;
+
+    message StoragePreConditions {
+      optional BatteryTestState battery_test_state = 1;
+
+      enum BatteryTestState {
+        IDLE = 0;
+        NOT_TESTED = 1;
+        SLAVES_NOT_TESTED = 2;
+        SLAVES_NOT_COMMUNICATING = 3;
+      }
+    }
+
+    message LimitControl {
+      optional ControlMode control_mode = 1;
+      optional types.FloatS site_limit_watt = 2;
+      optional LimitMode limit_mode = 3;
+
+      message ControlMode {
+        optional types.Bool export_control = 1;
+        optional types.Bool production_control = 2;
+        optional types.Bool minimumImport_control = 3;
+        optional types.Bool disable = 4;
+      }
+
+      message LimitMode {
+        optional types.Bool total = 1;
+        optional types.Bool per_phase = 2;
+      }
+    }
+
+    message EnergyControl {
+      optional types.Bool msc = 1;
+      optional types.Bool tou = 2;
+      optional types.Bool backup_only = 3;
+      optional types.Bool disable = 4;
+      optional types.Bool remote = 5;
+      optional StoragePreConditions pre_conditions = 6;
+    }
+
+    message Operation {
+    }
+
+    message Calendar {
+    }
+
+    message StorageControl {
+      optional types.FloatS backup_reserved = 1;
+      optional types.Bool grid_charge = 2;
+      optional AcChargeLimit ac_charge_limit = 3;
+      optional StoragePreConditions pre_conditions = 4;
+      optional storage_lib.GridCharge grid_charge_policy = 5;
+
+      message AcChargeLimit {
+        optional LimitType limit_type = 1;
+        optional types.FloatS limit = 2;
+
+        message LimitType {
+          optional types.Bool kwh = 1;
+          optional types.Bool pv = 2;
+          optional types.Bool none = 3;
+        }
+      }
+    }
+
+    message Advanced {
+      optional types.Bool external_production = 1;
+      optional types.FloatS max_power = 2;
+    }
+
+    message BackupConf {
+      optional types.Bool backup_enable = 1;
+      optional types.FloatS backup_reerved = 2;
+      optional StoragePreConditions pre_conditions = 3;
+    }
+
+    message Ess {
+      optional OperationMode operation_mode = 1;
+      optional types.Bool lock_is_active = 2;
+      optional types.Uint32 timer_sec = 3;
+      optional StoragePreConditions pre_conditions = 4;
+
+      message OperationMode {
+        optional types.Bool unrestricted = 1;
+        optional types.Bool export_only = 2;
+        optional types.Bool import_only = 3;
+        optional types.Bool no_exchange = 4;
+      }
+    }
+
+    message ImportLimit {
+      optional ControlMode control_mode = 1;
+      optional LimitMode limit_mode = 2;
+      optional LimitSettings settings = 3;
+
+      message ControlMode {
+        optional types.Bool k_watt = 1;
+        optional types.Bool k_volt_ampere = 2;
+        optional types.Bool ac_ampere = 3;
+        optional types.Bool disable = 4;
+      }
+
+      message LimitMode {
+        optional types.Bool total = 1;
+        optional types.Bool per_phase = 2;
+      }
+
+      message LimitSettings {
+        optional types.Uint32 min_num_of_limits = 1;
+        optional types.Uint32 max_num_of_limits = 2;
+        optional types.Uint32 limit_rules = 3;
+        optional types.Uint32 duration_rules = 4;
+        optional types.Uint32 lowest_limit_min_duration = 5;
+        repeated types.MapUintToUint limits = 6;
+        optional Warning warning = 7;
+
+        enum Warning {
+          NONE = 0;
+          IMPORT_LIMIT_NO_DEVICES = 1;
+        }
+      }
+    }
+  }
+
+  message RRCR {
+    optional State state0 = 1;
+    optional State state1 = 2;
+    optional State state2 = 3;
+    optional State state3 = 4;
+    optional State state4 = 5;
+    optional State state5 = 6;
+    optional State state6 = 7;
+    optional State state7 = 8;
+    optional State state8 = 9;
+    optional State state9 = 10;
+    optional State stateA = 11;
+    optional State stateB = 12;
+    optional State stateC = 13;
+    optional State stateD = 14;
+    optional State stateE = 15;
+    optional State stateF = 16;
+    optional types.Bool enable = 17;
+
+    message State {
+      optional types.FloatS cosphi = 1;
+      optional types.Uint32 percentage = 2;
+      optional types.Bool enable = 3;
+    }
+  }
+
+  message ReactivePower {
+    optional Mode mode = 1;
+    optional types.FloatS cosphi = 2;
+    repeated types.MapFloatSToFloatS cosphi_p = 3;
+    optional types.FloatS q = 4;
+    repeated types.MapFloatSToFloatS qu = 5;
+    repeated types.MapFloatSToFloatS qp = 6;
+    optional types.FloatS u_nominal = 7;
+    optional PowerPriority power_priority = 8;
+
+    message Mode {
+      optional types.Bool cosphi = 1;
+      optional types.Bool cosphi_p = 2;
+      optional types.Bool q = 3;
+      optional types.Bool qu_qp = 4;
+      optional types.Bool pri = 5;
+    }
+
+    message PowerPriority {
+      optional types.Bool active = 1;
+      optional types.Bool reactive = 2;
+    }
+  }
+
+  message ActivePower {
+    optional types.FloatS power_limit = 1;
+    optional types.FloatS current_limit = 2;
+    optional WakeupGradient wakeup_gradient = 3;
+    optional types.Uint32 gradient_time = 4;
+    repeated types.MapFloatSToFloatS pf = 5;
+    repeated types.MapFloatSToFloatS pv = 6;
+    optional types.FloatS ramp_rate = 7;
+    optional PwrFrqConstantSlope pf_constant_slope = 8;
+
+    message WakeupGradient {
+      optional types.Bool enable = 1;
+    }
+
+    message PwrFrqConstantSlope {
+      optional types.FloatS deadband_overflow = 1;
+      optional types.FloatS deadband_underflow = 2;
+      optional types.FloatS slope_overflow = 3;
+      optional types.FloatS slope_underflow = 4;
+    }
+  }
+
+  message WakeupConfigs {
+    optional types.FloatS min_wakeup_freq = 1;
+    optional types.FloatS max_wakeup_freq = 2;
+    optional types.FloatS min_wakeup_vgrid = 3;
+    optional types.FloatS max_wakeup_vgrid = 4;
+  }
+
+  message Advanced {
+    optional SetFrt set_frt = 1;
+    optional types.FloatS frt_k_factor = 2;
+    optional ZeroLimitControl zero_limit_control = 3;
+    optional ExternalRelay external_relay = 4;
+    optional DCOVoltageSettings dco_voltage_settings = 5;
+
+    message SetFrt {
+      optional types.Bool enable = 1;
+      optional FrtMode frt_mode = 2;
+      optional types.FloatS frt_k_factor = 3;
+      optional types.FloatS over_voltage = 4;
+      optional types.FloatS under_voltage = 5;
+
+      message FrtMode {
+        optional Mode mode_selected = 1;
+        repeated Mode mode_options = 2;
+
+        enum Mode {
+          OFF = 0;
+          REACTIVE_PUSH = 1;
+          NO_ACTIVE_SLOW_REACTIVE_RETURN = 2;
+          NO_REACTIVE = 3;
+          NO_ACTIVE = 4;
+          REACTIVE_PUSH_WITH_RESTRIC_RANGE = 5;
+        }
+      }
+    }
+
+    message ZeroLimitControl {
+      optional types.Bool enable = 1;
+    }
+
+    message ExternalRelay {
+      optional RelayStatus relay_status = 1;
+      optional RelayFunction relay_function = 2;
+      optional DisengageMethod disengage_method = 3;
+
+      enum RelayStatus {
+        NOT_AVAILABLE = 0;
+        IDLE = 1;
+        SIGNALING = 2;
+        ERROR = 3;
+      }
+
+      message RelayFunction {
+        optional types.Bool disabled = 1;
+        optional types.Bool inverter_grid_connection = 2;
+        optional types.Bool error_signaling = 3;
+      }
+
+      message DisengageMethod {
+        optional types.Bool event_ended = 1;
+        optional types.Bool p_switch = 2;
+        optional types.Bool timeout = 3;
+        optional types.Uint32 timeout_sec = 4;
+      }
+    }
+
+    message DCOVoltageSettings {
+      optional DCOVoltage dco_voltage_selected = 1;
+      repeated DCOVoltage dco_voltage_options = 2;
+
+      enum DCOVoltage {
+        DISABLED = 0;
+        DCO_750V = 1;
+        DCO_850V = 2;
+        DCO_400V = 3;
+        DCO_490V = 4;
+      }
+    }
+  }
+
+  message PhaseBalancer {
+    optional Type type = 1;
+    optional types.FloatS max_production = 2;
+
+    message Type {
+      optional types.Bool disabled = 1;
+      optional types.Bool production = 2;
+    }
+  }
+
+  message ExternalGenerator {
+    optional types.Bool enable = 1;
+    repeated types.MapFloatSToFloatS pf = 2;
+    repeated types.MapFloatSToFloatS pv = 3;
+    optional ApsControl aps_control = 4;
+
+    message ApsControl {
+      optional types.Bool disabled = 1;
+      optional types.Bool generator = 2;
+      optional types.Bool tesla_pw2 = 3;
+    }
+  }
+}

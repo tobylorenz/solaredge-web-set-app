@@ -1,0 +1,27 @@
+syntax = "proto2";
+
+package web_bui;
+
+import "bui_lib/bui_lib.proto";
+import "devices_lib/devices_lib.proto";
+import "types/types.proto";
+
+message BuiData {
+  optional devices_lib.DeviceInfo device_info = 1;
+  optional devices_lib.DeviceStatus device_status = 2;
+  optional devices_lib.DeviceConfigs device_configs = 3;
+  optional bui_lib.BuiStatus bui_status = 4;
+  optional bui_lib.BuiConfigs bui_configs = 5;
+}
+
+message BuiCmd {
+  optional CmdType cmd_type = 1;
+  optional types.String uniq_id = 2;
+  optional BuiData bui_data = 3;
+}
+
+enum CmdType {
+  NONE = 0;
+  GET_BUI_DATA = 1;
+  POST_BUI_DATA = 2;
+}

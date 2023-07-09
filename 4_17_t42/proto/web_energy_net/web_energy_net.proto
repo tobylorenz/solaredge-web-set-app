@@ -1,0 +1,19 @@
+syntax = "proto2";
+
+package web_energy_net;
+
+import "energy_net_lib/energy_net_lib.proto";
+
+message EnergyNetData {
+  optional energy_net_lib.EnergyNetStatus status = 1;
+}
+
+message EnergyNetCmd {
+  optional Cmd command = 1;
+
+  enum Cmd {
+    NO_CMD = 0;
+    GET_ENERGY_NET_DATA = 1;
+    FACTORY_RESET = 2;
+  }
+}

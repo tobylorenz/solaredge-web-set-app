@@ -1,0 +1,31 @@
+syntax = "proto2";
+
+package web_ev_charger;
+
+import "devices_lib/devices_lib.proto";
+import "ev_charger_lib/ev_charger_lib.proto";
+import "smart_devices_lib/smart_devices_lib.proto";
+import "types/types.proto";
+
+message EVChargerData {
+  optional devices_lib.DeviceInfo device_info = 1;
+  optional devices_lib.DeviceStatus device_status = 2;
+  optional devices_lib.DeviceConfigs device_configs = 3;
+  optional smart_devices_lib.SmartDeviceInfo smart_device_info = 4;
+  optional smart_devices_lib.SmartDeviceStatus smart_device_status = 5;
+  optional smart_devices_lib.SmartDeviceConfigs smart_device_configs = 6;
+  optional ev_charger_lib.EVChargerInfo ev_charger_info = 7;
+  optional ev_charger_lib.EVChargerStatus ev_charger_status = 8;
+}
+
+message EVChargerCmd {
+  optional CmdType cmd_type = 1;
+  optional types.String uniq_id = 2;
+  optional EVChargerData ev_charger_data = 3;
+
+  enum CmdType {
+    NONE = 0;
+    GET_EV_CHARGER_DATA = 1;
+    SET_EV_CHARGER_DATA = 2;
+  }
+}

@@ -1,0 +1,17 @@
+syntax = "proto2";
+
+package web_can;
+
+import "types/types.proto";
+import "web_follower_detect/web_follower_detect.proto";
+
+message Can {
+  optional Protocol protocol = 1;
+  optional web_follower_detect.FollowerDetect follower_detect = 2;
+  optional types.Uint32 device_id = 3;
+
+  message Protocol {
+    optional types.Bool se_follower = 1;
+    optional types.Bool se_leader = 2;
+  }
+}

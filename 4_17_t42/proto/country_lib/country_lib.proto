@@ -1,0 +1,14 @@
+syntax = "proto2";
+
+package country_lib;
+
+import "countries_orion/countries_orion.proto";
+
+message Country {
+  optional countries_orion.CountriesOrion countries_orion = 1;
+}
+
+message CountryConfig {
+  optional Country current_country = 1;
+  repeated Country country_options = 2;
+}

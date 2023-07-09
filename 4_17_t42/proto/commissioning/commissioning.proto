@@ -1,0 +1,293 @@
+syntax = "proto2";
+
+package commissioning;
+
+import "features/features.proto";
+import "general_types/general_types.proto";
+import "monitoring_details_package/monitoring_details_package.proto";
+import "notification_lib/notification_lib.proto";
+import "pre_commissioning/pre_commissioning.proto";
+import "types/types.proto";
+
+message Notification {
+  optional pre_commissioning.PreCommBanner pre_commissioning = 1;
+  optional notification_lib.DcCommBanner dc_commissioning = 2;
+}
+
+message Status {
+  map<string, FileState> file_state_map = 1;
+  optional string serial_number = 2;
+  optional UpgradeStatus upgrade_status = 3;
+  optional uint32 total_time = 4;
+  optional uint32 total_progress = 5;
+  optional DeviceMode device_mode = 6;
+  optional Notification notification = 7;
+  optional features.Features features = 8;
+
+  enum FileStatus {
+    NONE = 0;
+    UPLOADED = 1;
+    PROCESSING = 2;
+    ERROR = 3;
+    DONE = 4;
+  }
+
+  enum ErrorType {
+//    NONE = 0;
+    ERR_HASH_VERIFICATION = 1;
+    ERR_FILE_SIGNATURE = 2;
+    ERR_HASH_MISSING = 3;
+    ERR_HASH_WRONG_SN = 4;
+    ERR_INSUFFICIENT_STORAGE = 5;
+    ERR_OTHER = 6;
+    ERR_TARGET_TYPE = 7;
+    ERR_WRONG_PN = 8;
+  }
+
+  enum UpgradeStatus {
+    IDLE = 0;
+    UPGRADING = 1;
+    UPGRADE_ERROR = 2;
+    CENTRAL_COMMISSIONING_IN_PROGRESS = 3;
+  }
+
+  enum DeviceMode {
+    COMMISSIONING = 0;
+    PRE_COMMISSIONING_NOT_ACTIVATED = 1;
+    PRE_COMMISSIONING_ACTIVATED = 2;
+  }
+
+  message FileState {
+    optional FileType file_type = 1;
+    optional uint32 retry = 2;
+    optional FileStatus file_status = 3;
+    optional uint32 execution_progress = 4;
+    optional ErrorType error_type = 5;
+    optional general_types.ControllerType controller_type = 6;
+    optional general_types.Battery batteries = 7;
+  }
+}
+
+message WebUrls {
+  optional string home_url = 1;
+  optional string status_url = 2;
+  optional string view_only_url = 3;
+  optional string monitoring_only_base_url = 4;
+  optional string pre_commissioning_base_url = 5;
+  optional string iws_base_url = 6;
+  optional string myse_base_url = 7;
+  optional string myse_status_sub_url = 8;
+  optional string myse_communication_sub_url = 9;
+  optional string myse_evsa_setup_sub_url = 10;
+  optional string myse_monitoring_sub_url = 11;
+}
+
+message DeviceIdentity {
+  optional bool is_activated = 1;
+  optional general_types.ProductFamily product_family = 2;
+  optional general_types.ProductType product_type = 3;
+  repeated general_types.Controller controllers = 4;
+  repeated general_types.Battery batteries = 5;
+  optional string serial_number = 6;
+  optional string home_url = 7;
+  optional string status_url = 8;
+  optional string view_only_url = 9;
+  optional string myse_base_url = 10;
+  optional string myse_status_sub_url = 11;
+  optional string myse_communciation_sub_url = 12;
+  optional string myse_evsa_setup_sub_url = 13;
+  optional string monitoring_only_base_url = 14;
+  optional bool is_ready = 15;
+  optional string myse_monitoring_sub_url = 16;
+  optional string pre_commissioning_base_url = 17;
+  optional string pn = 18;
+  optional general_types.LinuxLayout linux_layout = 19;
+  repeated general_types.Device external_devices = 20;
+  optional WebUrls web_urls = 21;
+  optional general_types.ProductSegment product_segment = 22;
+}
+
+message DeviceIdentityStatus {
+  optional DeviceIdentity device_identity = 1;
+  optional Status device_status = 2;
+}
+
+message AvailableVersion {
+  optional general_types.ControllerType controller_type = 1;
+  optional general_types.Version new_version = 2;
+  optional VersionImportance version_importance = 3;
+  optional FileStatus file_status = 4;
+
+  enum VersionImportance {
+    IMPORTANCE_UNKNOWN = 0;
+    OPTIONAL = 1;
+    MANDATORY = 2;
+  }
+
+  enum FileStatus {
+    NOT_UPLOADED = 0;
+    UPLOAD_FAILED = 1;
+    UPLOADED = 2;
+    EXCECUTED = 3;
+  }
+}
+
+message Description {
+  optional uint32 files_count = 1;
+  optional ActivationMetadata activation_metadata = 2;
+  repeated MapSpffSn map_spff_sn = 3;
+
+  message ActivationMetadata {
+    optional bytes spff_hash = 1;
+    optional string pn = 2;
+  }
+
+  enum ExecutionType {
+    EXECUTION_TYPE_THIS_DEVICE_ONLY = 0;
+    EXECUTION_TYPE_FOLLOWERS_ONLY = 1;
+    EXECUTION_TYPE_FULL_SIZE = 2;
+  }
+
+  message MapSpffSn {
+    repeated string file_name = 1;
+    optional types.Uint32 sn = 2;
+    optional ActivationMetadata file_activation_metadata = 3;
+  }
+}
+
+message UploadReport {
+  repeated AvailableVersion available_versions = 1;
+}
+
+message ErrorResponse {
+  optional ErrorCode error_code = 1;
+  optional string description = 2;
+
+  enum ErrorCode {
+    UNDEFINED = 0;
+    AUTHENTICATION_ERROR = 1;
+    COMMUNICATION_ERROR = 2;
+    INTERNAL_ERROR = 3;
+    INVALID_FILE = 4;
+  }
+}
+
+message UploadStatus {
+  optional Status status = 1;
+
+  enum Status {
+    SUCCESS = 0;
+    ERROR_FILE_SIGNATURE = 1;
+    ERROR_INSUFFICIENT_STORAGE = 2;
+  }
+}
+
+message Activation {
+  optional bytes spff = 1;
+  optional bytes spff_hash = 2;
+  optional string pn = 3;
+}
+
+message IsReady {
+  optional uint32 progess = 1;
+  optional bool ready = 2;
+}
+
+message Communication {
+  optional bool s_ok = 1;
+  optional bool internal_connection = 2;
+  optional general_types.DateTime last_connection = 3;
+  optional uint32 reconnect_timeout = 4;
+  optional ConnectionType connection_type = 5;
+  optional Lan lan = 6;
+  optional Wifi wifi = 7;
+  optional Cellular cellular = 8;
+
+  enum ConnectionType {
+    LAN = 0;
+    WIFI = 1;
+    WIFI_GATEWAY = 2;
+    CELLULAR = 3;
+    RS485_1_SLAVE = 4;
+    RS485_2_SLAVE = 5;
+    ZIGBEE_SLAVE = 6;
+  }
+
+  message Lan {
+    optional bool dhcp = 1;
+  }
+
+  message Wifi {
+    optional string ssid = 1;
+    optional WifiSignalStrength signal_strength = 2;
+
+    enum WifiSignalStrength {
+      NONE = 0;
+      LOW = 1;
+      MID = 2;
+      HIGH = 3;
+      EXCELLENT = 4;
+    }
+  }
+
+  message Cellular {
+    optional string cellular_operator = 1;
+    optional CellularSignalStrength signal_strength = 2;
+
+    enum CellularSignalStrength {
+      NONE = 0;
+      LOWEST = 1;
+      LOW = 2;
+      MEDIUM = 3;
+      HIGH = 4;
+      HIGHEST = 5;
+      UNKNOWN = 6;
+    }
+  }
+}
+
+message Cert {
+  optional string content = 1;
+}
+
+message ApiMonitoringDetails {
+  optional monitoring_details_package.ApiMonitorDetailsBase monitoring_details = 1;
+}
+
+message KeepAlive {
+  optional string serial_number = 1;
+}
+
+message CentralCommissioning {
+  repeated Slave slaves = 1;
+  optional types.String scanning_end_url = 2;
+
+  message Slave {
+    optional types.String sn = 1;
+    optional types.Bool scan_only = 2;
+  }
+}
+
+message Location {
+  optional string countryCode = 1;
+}
+
+message DateAndTime {
+  optional general_types.DateTime date = 1;
+  optional types.String ntp = 2;
+  optional types.Int32 gmt_offset = 3;
+}
+
+enum FileType {
+  PORTIA = 0;
+  DSP1 = 1;
+  DSP2 = 2;
+  ACTIVATION = 3;
+  CONFIGURATION = 4;
+  FW_UPGRADE = 5;
+  UNKNOWN = 6;
+}
+
+enum DeviceInitFlags {
+  NONE = 0;
+}

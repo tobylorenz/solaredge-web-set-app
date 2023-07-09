@@ -1,0 +1,85 @@
+syntax = "proto2";
+
+package battery_self_test;
+
+import "general_types/general_types.proto";
+import "types/types.proto";
+
+message Test {
+  optional TestStatus status = 1;
+  optional FailedReason failed_reason = 2;
+
+  enum TestStatus {
+    NOT_TESTED = 0;
+    IN_PROGRESS = 1;
+    PASSED = 2;
+    FAILED = 3;
+    SKIPPED = 4;
+  }
+
+  enum FailedReason {
+    FAILED_NONE = 0;
+    FAILED_DC_LINK_ERROR = 1;
+    FAILED_BATT_NOT_ENABLED = 2;
+    FAILED_SYSTEM_IS_NOT_READY = 3;
+    FAILED_CANT_CHARGE_DISCHARGE = 4;
+    FAILED_KEEP_ALIVE_ENABLE_CANT_SENT = 5;
+    FAILED_KEEP_ALIVE_DISABLE_CANT_SENT = 6;
+    FAILED_OFF_ERROR = 7;
+    FAILED_SWAP_BATTERIS = 8;
+    FAILED_DISABLE_KA_TIMEOUT = 9;
+    FAILED_ENABLE_KA_TIMEOUT = 10;
+    FAILED_COMM_ERROR = 11;
+    FAILED_CANT_GET_BATT_PWR = 12;
+    FAILED_PWR_ERROR = 13;
+    FAILED_NOT_STABLED = 14;
+    FAILED_FIRST_BATT_ERROR = 15;
+    FAILED_NO_BATTERY_ACTIVE_WHILE_WAITING_TO_DIGITAL = 16;
+    SKIPPED_BELOW_MIN_SOE = 17;
+    SKIPPED_ABOVE_MAX_SOE = 18;
+  }
+}
+
+message BatterySelfTest {
+  optional Test communication_test = 1;
+  optional Test charge_test = 2;
+  optional Test discharge_test = 3;
+  optional Test test_summary = 4;
+}
+
+message InverterSelfTest {
+  optional general_types.DateTime test_date = 1;
+  optional InverterSelfTestStatus test_summary = 2;
+  optional types.Bool test_disabled = 3;
+  optional PreConditionInverter pre_condition = 4;
+}
+
+message SiteSelfTest {
+  optional SelfTestStatus self_test_status = 1;
+  optional types.Bool self_test_disabled = 2;
+}
+
+enum SelfTestStatus {
+  PENDING_SELF_TEST = 0;
+  SELF_TEST_IN_PROGRESS = 1;
+  SELF_TEST_PASSED = 2;
+  SELF_TEST_FAILED = 3;
+}
+
+enum PreConditionInverter {
+  INV_PRE_COND_NONE = 0;
+  INV_PRE_COND_NOT_READY_INV_OFF = 1;
+  INV_PRE_COND_NOT_READY_INV_COMM_ERROR = 2;
+  INV_PRE_COND_NOT_READY_INV_BATT_ERROR = 3;
+  INV_PRE_COND_NOT_READY_MIN_SOE = 4;
+  INV_PRE_COND_SYSTEM_IS_NOT_READY = 5;
+}
+
+enum InverterSelfTestStatus {
+  INVERTER_PENDING_SELF_TEST = 0;
+  INVERTER_GRM_IN_PROGRESS = 1;
+  INVERTER_PREPARE_SELF_TEST = 2;
+  INVERTER_SELF_TEST_IN_PROGRESS = 3;
+  INVERTER_SELF_TEST_PASSED = 4;
+  INVERTER_SELF_TEST_FAILED = 5;
+}
